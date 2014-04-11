@@ -1,0 +1,7 @@
+
+class :
+  - class : ExampleETL
+
+importer :
+  - src :  src/sample.txt
+ 
