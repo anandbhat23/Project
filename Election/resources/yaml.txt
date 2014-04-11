@@ -1,0 +1,10 @@
+Configuration :
+- Name : server1   
+  IP   : 128.237.217.127
+  Port : 10001
+- Name : server2  
+  IP   : 128.237.217.127
+  Port : 10002
+- Name : server3  
+  IP   : 128.237.217.127
+  Port : 10003
