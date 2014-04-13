@@ -11,8 +11,10 @@ public enum YamlLabel {
 	TABLE("table"),
 	COLUMNS("columns"),
 	ROW_START("rowStart"),
-  	ROW_END("rowEnd");
-
+  	ROW_END("rowEnd"),
+	DATA("data"),
+	DESTINATION ("dest");
+	
 	private String lableName;
 
 	YamlLabel(String labelName){

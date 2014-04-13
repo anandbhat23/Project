@@ -1,6 +1,7 @@
 package mysql.utils;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class MySQLTask implements Serializable{
 	

@@ -1,7 +1,7 @@
+package mysql.utils;
+
 import static common.YamlLabel.*;
 
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -15,27 +15,29 @@ import protobuf.ConfigProtos.Configuration;
 import protobuf.ConfigProtos.Exporter;
 import protobuf.ConfigProtos.Importer;
 import protobuf.ConfigProtos.Transformer;
+import protobuf.ConfigProtos.Transformer;
 
 import com.google.common.collect.Lists;
 
-public class Helper {
+public class MySQLHelperProtobuf {
 
-	static Configuration.Builder configuration = Configuration.newBuilder();
-	
 	@SuppressWarnings("unchecked")
-	public static Configuration getReader(String config_file) {
-
+	public static MySQLTask getMySQLTask(String config_file) {
+		
 		//Protobuf objects
 		Importer.Builder importer = Importer.newBuilder();
 		Exporter.Builder exporter = Exporter.newBuilder();
 		Transformer.Builder transformer = Transformer.newBuilder();
-
+		
+		
 		Yaml yaml = new Yaml();
-		BufferedReader br = null;
+		MySQLConnection sourceConn;
+		MySQLConnection destinationConn;
+		MySQLTask mySQLTask = null;
 		try {
 			InputStream is = new FileInputStream(new File(config_file));
-			@SuppressWarnings("unchecked")
-			Map<String, ArrayList<Map<String, Object>>> map = (Map<String, ArrayList<Map<String, Object>>>) yaml.load(is);
+			Map<String, ArrayList<Map<String, Object>>> map = (Map<String, ArrayList<Map<String, Object>>>) yaml
+					.load(is);
 			ArrayList<Map<String, Object>> importers = map.get(IMPORTER
 					.getLabelName());
 			ArrayList<Map<String, Object>> exporters = map.get(EXPORTER
@@ -44,24 +46,45 @@ public class Helper {
 					.getLabelName());
 		
 			String source = null;
-			String dest = null;
 			String username = null;
 			String password = null;
 			String table = null;
 			Integer rowStart = null;
 			Integer rowEnd = null;
 			List<String> columns = Lists.newArrayList();
-			String transformerOps = null;
-
-			//Importer
+			List<String> transformerOps = Lists.newArrayList();
+			
+			// TODO Support multiple sources
+			// for (Map<String, Object> source : sources) {
 			Map<String, Object> importerObj = importers.get(0);
 			
 			source = (String) importerObj.get(SOURCE.getLabelName());
 			importer.setSource(source);
 			
-			//Exporter
-			Map<String, Object> exporterObj = exporters.get(0);
+			username = (String) importerObj.get(USERNAME.getLabelName());
+			importer.setUsername(username);
 			
+			password = (String) importerObj.get(PASSWORD.getLabelName());
+			importer.setPassword(password);
+			
+			table = (String) importerObj.get(TABLE.getLabelName());
+			importer.setTable(table);
+			
+			columns = (List<String>) importerObj.get(COLUMNS.getLabelName());
+			//importer.ad
+			
+			rowStart = (Integer) importerObj.get(ROW_START.getLabelName());
+			importer.setRowStart(rowStart);
+			
+			rowEnd = (Integer) importerObj.get(ROW_END.getLabelName());
+			importer.setRonwEnd(rowEnd);
+			
+			sourceConn = new MySQLConnection(source, username, password, table, columns, rowStart, rowEnd);
+			
+			Map<String, Object> exporterObj = exporters.get(0);
+			rowStart = null;
+			rowEnd = null;
+
 			columns = (List<String>) exporterObj.get(COLUMNS.getLabelName());
 			exporter.addAllColumn(columns);
 			
@@ -77,36 +100,36 @@ public class Helper {
 			table = (String) exporterObj.get(TABLE.getLabelName());
 			exporter.setTable(table);
 			
-			dest = (String) exporterObj.get(DESTINATION.getLabelName());
-			exporter.setDestination(dest);
 			
-			//Transformer
+			destinationConn = new MySQLConnection(source, username, password, table, columns, rowStart, rowEnd);
+			
 			Map<String, Object> transformerObj = transformers.get(0);
-			transformerOps = (String) transformerObj.get(CLASS.getLabelName());
-			//transformer.setTransformOp(0, transformerOps);
+			transformerOps = (List<String>) transformerObj.get(CLASS.getLabelName());
+			transformer.addAllTransformOp(transformerOps);
 		
 			importer.build();
 			transformer.build();
 			exporter.build();
 			
-			
-			configuration.setType("HTTP");
+			Configuration.Builder configuration = Configuration.newBuilder();
+			configuration.setType("MySql");
 			configuration.setImporter(importer);
 			configuration.setTransformer(transformer);
 			configuration.setExporter(exporter);
 			configuration.build();
+			//TODO: Change constructor you can pass configuration object directly
 			
-//			String file = null;
-//			for (Map<String, Object> inmap : srcmap) {
-//				file = (String) inmap.get("src");
-//			}
-//			br = new BufferedReader(new FileReader(file));
-			
+			mySQLTask = new MySQLTask(sourceConn, destinationConn, transformerOps.remove(0));
+			// TODO Ensure Non null parameters
+			// }
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return configuration.build();
-
-	}
-
+		
+		
+		
+		
+		return mySQLTask;
+	}  
 }

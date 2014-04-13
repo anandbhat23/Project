@@ -1,12 +1,12 @@
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class ETLMessage implements Serializable {
   private static final long serialVersionUID = 1L;
   private MessageType type;
   private Object obj;
   private Object arg;
   
-  public Message(MessageType type, Object obj, Object arg) {
+  public ETLMessage(MessageType type, Object obj, Object arg) {
     this.type = type;
     this.obj = obj;
     this.arg = arg;

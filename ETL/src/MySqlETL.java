@@ -40,17 +40,17 @@ public class MySqlETL implements ETL {
 	}
 	
 	@Override
-	public Message importer() {
+	public ETLMessage importer() {
 		if(part < MAX_PARTS){
 			mySQLTask.setPart(part);
-			Message m = new Message(MessageType.MsgData, mySQLTask, null);
+			ETLMessage m = new ETLMessage(MessageType.MsgData, mySQLTask, null);
 			part++;
 			return m;
 		}
 		return null;
 	}
 	
-	public Message importerSlave() {
+	public ETLMessage importerSlave() {
 		if(currentRow < rowEnd){
 			try {
 				ResultSet result = sourceHandle.getRow(currentRow++);
@@ -64,14 +64,14 @@ public class MySqlETL implements ETL {
 	}
 
 	@Override
-	public Message transformer(Message m) {
+	public ETLMessage transformer(ETLMessage m) {
 		// TODO Implement transformer if necessary
 		System.out.println("LocalImporting the data");
 		return m;
 	}
 
 	@Override
-	public void exporter(Message m) {
+	public void exporter(ETLMessage m) {
 		// TODO Generate values String
 		System.out.println("Exporting the data");
 	}

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import protobuf.ConfigProtos.Configuration;
+
 public class SlaveTaskTracker {
 
   String masterAddr;
@@ -46,7 +48,7 @@ public class SlaveTaskTracker {
 
     public void run() {
       // System.out.println("HeartBeat!");
-      Message m = new Message(MessageType.MsgHeartBeat, slaveid, null);
+      ETLMessage m = new ETLMessage(MessageType.MsgHeartBeat, slaveid, null);
       sendMsgToMaster(m);
     }
   }
@@ -89,9 +91,9 @@ public class SlaveTaskTracker {
       ObjectInputStream is;
       try {
         is = new ObjectInputStream(socket.getInputStream());
-        Message msg = (Message) is.readObject();
+        ETLMessage msg = (ETLMessage) is.readObject();
         MessageType type = msg.getType();
-        Message response = new Message(MessageType.MsgOK, null, null);
+        ETLMessage response = new ETLMessage(MessageType.MsgOK, null, null);
         ObjectOutputStream out = new ObjectOutputStream(
             socket.getOutputStream());
         out.writeObject(response);
@@ -140,16 +142,16 @@ public class SlaveTaskTracker {
         // FT This is a job failure
         String err_msg = e.getMessage();
         Task task = new ETLTask(taskid, jid, null, null);
-        Message msg = new Message(MessageType.MsgJobFailure, task, err_msg);
+        ETLMessage msg = new ETLMessage(MessageType.MsgJobFailure, task, err_msg);
         sendMsgToMaster(msg);
         return;
       }
 
       try {
 
-        Message transform_input = task.getMessage();
+    	Configuration transform_input = task.getMessage();
 
-        Message transform_output = job.transformer(transform_input);
+        Configuration transform_output = job.transformer(transform_input);
 
         job.exporter(transform_output);
 
@@ -159,20 +161,20 @@ public class SlaveTaskTracker {
             + taskid + ". This is a task failure.");
         String err_msg = e.getMessage();
         Task task = new ETLTask(taskid, jid, null, null);
-        Message msg = new Message(MessageType.MsgTaskFailure, task, err_msg);
+        ETLMessage msg = new ETLMessage(MessageType.MsgTaskFailure, task, err_msg);
         sendMsgToMaster(msg);
 
       }
 
       System.out.println("task  jid=" + jid + " tid=" + taskid + " finished");
       task.setMessage(null);
-      Message msg = new Message(MessageType.MsgTaskFinish, task, null);
+      ETLMessage msg = new ETLMessage(MessageType.MsgTaskFinish, task, null);
       sendMsgToMaster(msg);
     }
 
   }
 
-  private void sendMsgToMaster(Message m) {
+  private void sendMsgToMaster(ETLMessage m) {
     MsgDispatcher dispatcher = new MsgDispatcher(m, masterAddr);
     dispatcher.start();
   }
@@ -183,10 +185,10 @@ public class SlaveTaskTracker {
    */
 
   public class MsgDispatcher extends Thread {
-    private Message m;
+    private ETLMessage m;
     private String dstAddr;
 
-    public MsgDispatcher(Message m, String dstAddr) {
+    public MsgDispatcher(ETLMessage m, String dstAddr) {
       this.m = m;
       this.dstAddr = dstAddr;
     }
@@ -201,7 +203,7 @@ public class SlaveTaskTracker {
         os.writeObject(m);
         os.flush();
         ObjectInputStream is = new ObjectInputStream(s.getInputStream());
-        Message responseMsg = (Message) is.readObject();
+        ETLMessage responseMsg = (ETLMessage) is.readObject();
         if (responseMsg.getType() != MessageType.MsgOK)
           throw new RuntimeException("MSG ERROR");
         s.close();

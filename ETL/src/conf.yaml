@@ -1,6 +1,6 @@
 
 class :
-  - class : ExampleETL
+  - class : HttpETL
 
 importer :
   - src :  src/sample.txt

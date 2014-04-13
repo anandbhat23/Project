@@ -1,5 +1,7 @@
 import java.io.Serializable;
 
+import protobuf.ConfigProtos.Configuration;
+
 
 public interface Task extends Serializable{
 	public int getSlaveId();
@@ -10,8 +12,8 @@ public interface Task extends Serializable{
 	public void setJobId(int jobId);
 	public String getJob();
 	public void setJob(String job);
-	public Message getMessage();
-	public void setMessage(Message m);
+	public Configuration getMessage();
+	public void setMessage(Configuration m);
 	public long getTimestamp();
 	public void setTimestamp(long ts);
 	public int getRetry();

@@ -38,9 +38,9 @@ public class MasterController {
             @SuppressWarnings("unchecked")
             Map<String, ArrayList<Map<String, Object>>> map = (Map<String, ArrayList<Map<String, Object>>>) yaml
                 .load(is);
-            ArrayList<Map<String, Object>> srcmap = map.get("class");
+            ArrayList<Map<String, Object>> srcmap = map.get("classType");
             for (Map<String, Object> inmap : srcmap) {
-              classname = (String) inmap.get("class");
+              classname = (String) inmap.get("type");
             }
           } catch (Exception e) {
             e.printStackTrace();

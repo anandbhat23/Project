@@ -1,5 +1,7 @@
 import java.io.Serializable;
 
+import protobuf.ConfigProtos.Configuration;
+
 public class ETLTask implements Serializable, Task {
 
   private static final long serialVersionUID = -12345678L;
@@ -10,13 +12,13 @@ public class ETLTask implements Serializable, Task {
   // name of the etl class
   private String etljob;
   // message data
-  private Message message;
+  private Configuration message;
   // used for fault tolerance.
   private long ts;
   // used for fault tolerance.
   private int retry = 0;
 
-  public ETLTask(int taskId, int jobId, String job, Message m) {
+  public ETLTask(int taskId, int jobId, String job, Configuration m) {
     this.taskId = taskId;
     this.jobId = jobId;
     this.etljob = job;
@@ -55,11 +57,11 @@ public class ETLTask implements Serializable, Task {
     this.slaveId = slaveId;
   }
 
-  public Message getMessage() {
+  public Configuration getMessage() {
     return message;
   }
 
-  public void setMessage(Message m) {
+  public void setMessage(Configuration m) {
     this.message = m;
   }
 

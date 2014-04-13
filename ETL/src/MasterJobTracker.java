@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import protobuf.ConfigProtos.Configuration;
+
 class MasterJobTracker {
 
   private static final int TASK_PER_SLAVE = 3;
@@ -124,7 +126,7 @@ class MasterJobTracker {
 
     int taskid = 0;
     int taskcount = 0;
-    Message m;
+    Configuration m;
     while ((m = job.importer()) != null) {
 
       ETLTask task = new ETLTask(taskid++, jid, classname, m);
@@ -143,7 +145,7 @@ class MasterJobTracker {
             + freeSlave);
         slaveLoadMap.get(freeSlave).add(task);
         // System.out.println("[slaveLoadMap debug]"+slaveLoadMap.toString());
-        Message msg = new Message(MessageType.MsgTaskStart, task, null);
+        ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, task, null);
         SendMsgToSlave(msg, freeSlave);
       }
       taskcount++;
@@ -157,17 +159,17 @@ class MasterJobTracker {
 
   }
 
-  private void SendMsgToSlave(Message m, int slaveId) {
+  private void SendMsgToSlave(ETLMessage m, int slaveId) {
     MsgDispatcher dispatcher = new MsgDispatcher(m, slaveId);
     dispatcher.start();
   }
 
   public class MsgDispatcher extends Thread {
 
-    private Message m;
+    private ETLMessage m;
     private int slaveId;
 
-    public MsgDispatcher(Message m, int slaveId) {
+    public MsgDispatcher(ETLMessage m, int slaveId) {
       this.m = m;
       this.slaveId = slaveId;
     }
@@ -181,7 +183,7 @@ class MasterJobTracker {
         ObjectOutputStream os = new ObjectOutputStream(s.getOutputStream());
         os.writeObject(m);
         ObjectInputStream is = new ObjectInputStream(s.getInputStream());
-        Message responseMsg = (Message) is.readObject();
+        ETLMessage responseMsg = (ETLMessage) is.readObject();
         if (responseMsg.getType() != MessageType.MsgOK)
           throw new RuntimeException("MSG ERROR 01");
         System.out.println("msg sent to slave " + ip + " " + port + ".");
@@ -209,10 +211,10 @@ class MasterJobTracker {
       ObjectInputStream is;
       try {
         is = new ObjectInputStream(socket.getInputStream());
-        Message msg = (Message) is.readObject();
+        ETLMessage msg = (ETLMessage) is.readObject();
         MessageType type = msg.getType();
         // TODO error handle
-        Message response = new Message(MessageType.MsgOK, null, null);
+        ETLMessage response = new ETLMessage(MessageType.MsgOK, null, null);
         ObjectOutputStream out = new ObjectOutputStream(
             socket.getOutputStream());
         out.writeObject(response);
@@ -295,7 +297,7 @@ class MasterJobTracker {
       }
       nextTask.setSlaveId(slaveid);
       slaveLoadMap.get(slaveid).add(nextTask);
-      Message msg = new Message(MessageType.MsgTaskStart, nextTask, null);
+      ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, nextTask, null);
       System.out.println("send task" + nextTask.getTaskId() + " to slave "
           + slaveid);
       SendMsgToSlave(msg, slaveid);
@@ -381,7 +383,7 @@ class MasterJobTracker {
         System.out.println("send task" + t.getTaskId() + " to slave "
             + freeSlave);
         slaveLoadMap.get(freeSlave).add(t);
-        Message msg = new Message(MessageType.MsgTaskStart, t, null);
+        ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, t, null);
         SendMsgToSlave(msg, freeSlave);
       }
     }
