@@ -15,14 +15,14 @@ message Importer {
   	optional string username = 2;
   	optional string password = 3;
   	optional string table = 4;
-  	optional string column = 5;
+  	repeated string column = 5;
   	optional int32 rowStart = 6;
   	optional int32 ronwEnd = 7;
   	repeated string data = 8;
 }
 
 message Transformer {
-	repeated string transform_op = 1;
+	optional string transform_op = 1;
 }
 message Exporter {
   	optional string source = 1;

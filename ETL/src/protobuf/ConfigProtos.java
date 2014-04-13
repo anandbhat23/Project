@@ -1150,20 +1150,25 @@ public final class ConfigProtos {
     com.google.protobuf.ByteString
         getTableBytes();
 
-    // optional string column = 5;
+    // repeated string column = 5;
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
      */
-    boolean hasColumn();
+    java.util.List<java.lang.String>
+    getColumnList();
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
      */
-    java.lang.String getColumn();
+    int getColumnCount();
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
+     */
+    java.lang.String getColumn(int index);
+    /**
+     * <code>repeated string column = 5;</code>
      */
     com.google.protobuf.ByteString
-        getColumnBytes();
+        getColumnBytes(int index);
 
     // optional int32 rowStart = 6;
     /**
@@ -1277,17 +1282,20 @@ public final class ConfigProtos {
               break;
             }
             case 42: {
-              bitField0_ |= 0x00000010;
-              column_ = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                column_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              column_.add(input.readBytes());
               break;
             }
             case 48: {
-              bitField0_ |= 0x00000020;
+              bitField0_ |= 0x00000010;
               rowStart_ = input.readInt32();
               break;
             }
             case 56: {
-              bitField0_ |= 0x00000040;
+              bitField0_ |= 0x00000020;
               ronwEnd_ = input.readInt32();
               break;
             }
@@ -1307,6 +1315,9 @@ public final class ConfigProtos {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          column_ = new com.google.protobuf.UnmodifiableLazyStringList(column_);
+        }
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
           data_ = new com.google.protobuf.UnmodifiableLazyStringList(data_);
         }
@@ -1514,47 +1525,34 @@ public final class ConfigProtos {
       }
     }
 
-    // optional string column = 5;
+    // repeated string column = 5;
     public static final int COLUMN_FIELD_NUMBER = 5;
-    private java.lang.Object column_;
+    private com.google.protobuf.LazyStringList column_;
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
      */
-    public boolean hasColumn() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+    public java.util.List<java.lang.String>
+        getColumnList() {
+      return column_;
     }
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
      */
-    public java.lang.String getColumn() {
-      java.lang.Object ref = column_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          column_ = s;
-        }
-        return s;
-      }
+    public int getColumnCount() {
+      return column_.size();
     }
     /**
-     * <code>optional string column = 5;</code>
+     * <code>repeated string column = 5;</code>
+     */
+    public java.lang.String getColumn(int index) {
+      return column_.get(index);
+    }
+    /**
+     * <code>repeated string column = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getColumnBytes() {
-      java.lang.Object ref = column_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        column_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+        getColumnBytes(int index) {
+      return column_.getByteString(index);
     }
 
     // optional int32 rowStart = 6;
@@ -1564,7 +1562,7 @@ public final class ConfigProtos {
      * <code>optional int32 rowStart = 6;</code>
      */
     public boolean hasRowStart() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>optional int32 rowStart = 6;</code>
@@ -1580,7 +1578,7 @@ public final class ConfigProtos {
      * <code>optional int32 ronwEnd = 7;</code>
      */
     public boolean hasRonwEnd() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
      * <code>optional int32 ronwEnd = 7;</code>
@@ -1624,7 +1622,7 @@ public final class ConfigProtos {
       username_ = "";
       password_ = "";
       table_ = "";
-      column_ = "";
+      column_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       rowStart_ = 0;
       ronwEnd_ = 0;
       data_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -1653,13 +1651,13 @@ public final class ConfigProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, getTableBytes());
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, getColumnBytes());
+      for (int i = 0; i < column_.size(); i++) {
+        output.writeBytes(5, column_.getByteString(i));
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(6, rowStart_);
       }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeInt32(7, ronwEnd_);
       }
       for (int i = 0; i < data_.size(); i++) {
@@ -1690,15 +1688,20 @@ public final class ConfigProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, getTableBytes());
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getColumnBytes());
+      {
+        int dataSize = 0;
+        for (int i = 0; i < column_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(column_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getColumnList().size();
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(6, rowStart_);
       }
-      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(7, ronwEnd_);
       }
@@ -1835,7 +1838,7 @@ public final class ConfigProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         table_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        column_ = "";
+        column_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
         rowStart_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -1887,16 +1890,18 @@ public final class ConfigProtos {
           to_bitField0_ |= 0x00000008;
         }
         result.table_ = table_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          column_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              column_);
+          bitField0_ = (bitField0_ & ~0x00000010);
         }
         result.column_ = column_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
+          to_bitField0_ |= 0x00000010;
         }
         result.rowStart_ = rowStart_;
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-          to_bitField0_ |= 0x00000040;
+          to_bitField0_ |= 0x00000020;
         }
         result.ronwEnd_ = ronwEnd_;
         if (((bitField0_ & 0x00000080) == 0x00000080)) {
@@ -1941,9 +1946,14 @@ public final class ConfigProtos {
           table_ = other.table_;
           onChanged();
         }
-        if (other.hasColumn()) {
-          bitField0_ |= 0x00000010;
-          column_ = other.column_;
+        if (!other.column_.isEmpty()) {
+          if (column_.isEmpty()) {
+            column_ = other.column_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureColumnIsMutable();
+            column_.addAll(other.column_);
+          }
           onChanged();
         }
         if (other.hasRowStart()) {
@@ -2285,76 +2295,95 @@ public final class ConfigProtos {
         return this;
       }
 
-      // optional string column = 5;
-      private java.lang.Object column_ = "";
-      /**
-       * <code>optional string column = 5;</code>
-       */
-      public boolean hasColumn() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+      // repeated string column = 5;
+      private com.google.protobuf.LazyStringList column_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureColumnIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          column_ = new com.google.protobuf.LazyStringArrayList(column_);
+          bitField0_ |= 0x00000010;
+         }
       }
       /**
-       * <code>optional string column = 5;</code>
+       * <code>repeated string column = 5;</code>
        */
-      public java.lang.String getColumn() {
-        java.lang.Object ref = column_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          column_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public java.util.List<java.lang.String>
+          getColumnList() {
+        return java.util.Collections.unmodifiableList(column_);
       }
       /**
-       * <code>optional string column = 5;</code>
+       * <code>repeated string column = 5;</code>
+       */
+      public int getColumnCount() {
+        return column_.size();
+      }
+      /**
+       * <code>repeated string column = 5;</code>
+       */
+      public java.lang.String getColumn(int index) {
+        return column_.get(index);
+      }
+      /**
+       * <code>repeated string column = 5;</code>
        */
       public com.google.protobuf.ByteString
-          getColumnBytes() {
-        java.lang.Object ref = column_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          column_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+          getColumnBytes(int index) {
+        return column_.getByteString(index);
       }
       /**
-       * <code>optional string column = 5;</code>
+       * <code>repeated string column = 5;</code>
        */
       public Builder setColumn(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureColumnIsMutable();
+        column_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string column = 5;</code>
+       */
+      public Builder addColumn(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
-        column_ = value;
+  ensureColumnIsMutable();
+        column_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>optional string column = 5;</code>
+       * <code>repeated string column = 5;</code>
+       */
+      public Builder addAllColumn(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureColumnIsMutable();
+        super.addAll(values, column_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string column = 5;</code>
        */
       public Builder clearColumn() {
+        column_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
-        column_ = getDefaultInstance().getColumn();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string column = 5;</code>
+       * <code>repeated string column = 5;</code>
        */
-      public Builder setColumnBytes(
+      public Builder addColumnBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000010;
-        column_ = value;
+  ensureColumnIsMutable();
+        column_.add(value);
         onChanged();
         return this;
       }
@@ -2532,25 +2561,20 @@ public final class ConfigProtos {
   public interface TransformerOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated string transform_op = 1;
+    // optional string transform_op = 1;
     /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
-    java.util.List<java.lang.String>
-    getTransformOpList();
+    boolean hasTransformOp();
     /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
-    int getTransformOpCount();
+    java.lang.String getTransformOp();
     /**
-     * <code>repeated string transform_op = 1;</code>
-     */
-    java.lang.String getTransformOp(int index);
-    /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
     com.google.protobuf.ByteString
-        getTransformOpBytes(int index);
+        getTransformOpBytes();
   }
   /**
    * Protobuf type {@code protobuf.Transformer}
@@ -2604,11 +2628,8 @@ public final class ConfigProtos {
               break;
             }
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                transformOp_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              transformOp_.add(input.readBytes());
+              bitField0_ |= 0x00000001;
+              transformOp_ = input.readBytes();
               break;
             }
           }
@@ -2619,9 +2640,6 @@ public final class ConfigProtos {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          transformOp_ = new com.google.protobuf.UnmodifiableLazyStringList(transformOp_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2653,38 +2671,52 @@ public final class ConfigProtos {
       return PARSER;
     }
 
-    // repeated string transform_op = 1;
+    private int bitField0_;
+    // optional string transform_op = 1;
     public static final int TRANSFORM_OP_FIELD_NUMBER = 1;
-    private com.google.protobuf.LazyStringList transformOp_;
+    private java.lang.Object transformOp_;
     /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
-    public java.util.List<java.lang.String>
-        getTransformOpList() {
-      return transformOp_;
+    public boolean hasTransformOp() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
-    public int getTransformOpCount() {
-      return transformOp_.size();
+    public java.lang.String getTransformOp() {
+      java.lang.Object ref = transformOp_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          transformOp_ = s;
+        }
+        return s;
+      }
     }
     /**
-     * <code>repeated string transform_op = 1;</code>
-     */
-    public java.lang.String getTransformOp(int index) {
-      return transformOp_.get(index);
-    }
-    /**
-     * <code>repeated string transform_op = 1;</code>
+     * <code>optional string transform_op = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getTransformOpBytes(int index) {
-      return transformOp_.getByteString(index);
+        getTransformOpBytes() {
+      java.lang.Object ref = transformOp_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        transformOp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private void initFields() {
-      transformOp_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      transformOp_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2698,8 +2730,8 @@ public final class ConfigProtos {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < transformOp_.size(); i++) {
-        output.writeBytes(1, transformOp_.getByteString(i));
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getTransformOpBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2710,14 +2742,9 @@ public final class ConfigProtos {
       if (size != -1) return size;
 
       size = 0;
-      {
-        int dataSize = 0;
-        for (int i = 0; i < transformOp_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(transformOp_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getTransformOpList().size();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getTransformOpBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2835,7 +2862,7 @@ public final class ConfigProtos {
 
       public Builder clear() {
         super.clear();
-        transformOp_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        transformOp_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
@@ -2864,12 +2891,12 @@ public final class ConfigProtos {
       public protobuf.ConfigProtos.Transformer buildPartial() {
         protobuf.ConfigProtos.Transformer result = new protobuf.ConfigProtos.Transformer(this);
         int from_bitField0_ = bitField0_;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          transformOp_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              transformOp_);
-          bitField0_ = (bitField0_ & ~0x00000001);
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
         }
         result.transformOp_ = transformOp_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -2885,14 +2912,9 @@ public final class ConfigProtos {
 
       public Builder mergeFrom(protobuf.ConfigProtos.Transformer other) {
         if (other == protobuf.ConfigProtos.Transformer.getDefaultInstance()) return this;
-        if (!other.transformOp_.isEmpty()) {
-          if (transformOp_.isEmpty()) {
-            transformOp_ = other.transformOp_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureTransformOpIsMutable();
-            transformOp_.addAll(other.transformOp_);
-          }
+        if (other.hasTransformOp()) {
+          bitField0_ |= 0x00000001;
+          transformOp_ = other.transformOp_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -2922,95 +2944,76 @@ public final class ConfigProtos {
       }
       private int bitField0_;
 
-      // repeated string transform_op = 1;
-      private com.google.protobuf.LazyStringList transformOp_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureTransformOpIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          transformOp_ = new com.google.protobuf.LazyStringArrayList(transformOp_);
-          bitField0_ |= 0x00000001;
-         }
-      }
+      // optional string transform_op = 1;
+      private java.lang.Object transformOp_ = "";
       /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
-      public java.util.List<java.lang.String>
-          getTransformOpList() {
-        return java.util.Collections.unmodifiableList(transformOp_);
+      public boolean hasTransformOp() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
-      public int getTransformOpCount() {
-        return transformOp_.size();
+      public java.lang.String getTransformOp() {
+        java.lang.Object ref = transformOp_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          transformOp_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>repeated string transform_op = 1;</code>
-       */
-      public java.lang.String getTransformOp(int index) {
-        return transformOp_.get(index);
-      }
-      /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getTransformOpBytes(int index) {
-        return transformOp_.getByteString(index);
+          getTransformOpBytes() {
+        java.lang.Object ref = transformOp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          transformOp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
       public Builder setTransformOp(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTransformOpIsMutable();
-        transformOp_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string transform_op = 1;</code>
-       */
-      public Builder addTransformOp(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureTransformOpIsMutable();
-        transformOp_.add(value);
+  bitField0_ |= 0x00000001;
+        transformOp_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string transform_op = 1;</code>
-       */
-      public Builder addAllTransformOp(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureTransformOpIsMutable();
-        super.addAll(values, transformOp_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
       public Builder clearTransformOp() {
-        transformOp_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
+        transformOp_ = getDefaultInstance().getTransformOp();
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string transform_op = 1;</code>
+       * <code>optional string transform_op = 1;</code>
        */
-      public Builder addTransformOpBytes(
+      public Builder setTransformOpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureTransformOpIsMutable();
-        transformOp_.add(value);
+  bitField0_ |= 0x00000001;
+        transformOp_ = value;
         onChanged();
         return this;
       }
@@ -4341,9 +4344,9 @@ public final class ConfigProtos {
       "otobuf.Transformer\022$\n\010exporter\030\004 \002(\0132\022.p" +
       "rotobuf.Exporter\"\216\001\n\010Importer\022\016\n\006source\030" +
       "\001 \001(\t\022\020\n\010username\030\002 \001(\t\022\020\n\010password\030\003 \001(" +
-      "\t\022\r\n\005table\030\004 \001(\t\022\016\n\006column\030\005 \001(\t\022\020\n\010rowS" +
+      "\t\022\r\n\005table\030\004 \001(\t\022\016\n\006column\030\005 \003(\t\022\020\n\010rowS" +
       "tart\030\006 \001(\005\022\017\n\007ronwEnd\030\007 \001(\005\022\014\n\004data\030\010 \003(" +
-      "\t\"#\n\013Transformer\022\024\n\014transform_op\030\001 \003(\t\"r" +
+      "\t\"#\n\013Transformer\022\024\n\014transform_op\030\001 \001(\t\"r" +
       "\n\010Exporter\022\016\n\006source\030\001 \001(\t\022\020\n\010username\030\002",
       " \001(\t\022\020\n\010password\030\003 \001(\t\022\r\n\005table\030\004 \001(\t\022\016\n" +
       "\006column\030\005 \003(\t\022\023\n\013destination\030\006 \001(\tB\030\n\010pr" +

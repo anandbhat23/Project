@@ -83,7 +83,7 @@ public class Helper {
 			//Transformer
 			Map<String, Object> transformerObj = transformers.get(0);
 			transformerOps = (String) transformerObj.get(CLASS.getLabelName());
-			//transformer.setTransformOp(0, transformerOps);
+			transformer.setTransformOp(transformerOps);
 		
 			importer.build();
 			transformer.build();

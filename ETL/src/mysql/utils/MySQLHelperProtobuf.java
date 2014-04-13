@@ -23,13 +23,13 @@ public class MySQLHelperProtobuf {
 
 	@SuppressWarnings("unchecked")
 	public static MySQLTask getMySQLTask(String config_file) {
-		
+
 		//Protobuf objects
 		Importer.Builder importer = Importer.newBuilder();
 		Exporter.Builder exporter = Exporter.newBuilder();
 		Transformer.Builder transformer = Transformer.newBuilder();
-		
-		
+
+
 		Yaml yaml = new Yaml();
 		MySQLConnection sourceConn;
 		MySQLConnection destinationConn;
@@ -44,7 +44,7 @@ public class MySQLHelperProtobuf {
 					.getLabelName());
 			ArrayList<Map<String, Object>> transformers = map.get(TRANSFORMER
 					.getLabelName());
-		
+
 			String source = null;
 			String username = null;
 			String password = null;
@@ -52,65 +52,64 @@ public class MySQLHelperProtobuf {
 			Integer rowStart = null;
 			Integer rowEnd = null;
 			List<String> columns = Lists.newArrayList();
-			List<String> transformerOps = Lists.newArrayList();
-			
+			String transformerOps = null;
+
 			// TODO Support multiple sources
-			// for (Map<String, Object> source : sources) {
 			Map<String, Object> importerObj = importers.get(0);
-			
+
 			source = (String) importerObj.get(SOURCE.getLabelName());
 			importer.setSource(source);
-			
+
 			username = (String) importerObj.get(USERNAME.getLabelName());
 			importer.setUsername(username);
-			
+
 			password = (String) importerObj.get(PASSWORD.getLabelName());
 			importer.setPassword(password);
-			
+
 			table = (String) importerObj.get(TABLE.getLabelName());
 			importer.setTable(table);
-			
+
 			columns = (List<String>) importerObj.get(COLUMNS.getLabelName());
-			//importer.ad
-			
+			importer.addAllColumn(columns);
+
 			rowStart = (Integer) importerObj.get(ROW_START.getLabelName());
 			importer.setRowStart(rowStart);
-			
+
 			rowEnd = (Integer) importerObj.get(ROW_END.getLabelName());
 			importer.setRonwEnd(rowEnd);
-			
+
 			sourceConn = new MySQLConnection(source, username, password, table, columns, rowStart, rowEnd);
-			
+
 			Map<String, Object> exporterObj = exporters.get(0);
 			rowStart = null;
 			rowEnd = null;
 
 			columns = (List<String>) exporterObj.get(COLUMNS.getLabelName());
 			exporter.addAllColumn(columns);
-			
+
 			source = (String) exporterObj.get(SOURCE.getLabelName());
 			exporter.setSource(source);
-			
+
 			username = (String) exporterObj.get(USERNAME.getLabelName());
 			exporter.setUsername(username);
-			
+
 			password = (String) exporterObj.get(PASSWORD.getLabelName());
 			exporter.setPassword(password);
-			
+
 			table = (String) exporterObj.get(TABLE.getLabelName());
 			exporter.setTable(table);
-			
-			
+
+
 			destinationConn = new MySQLConnection(source, username, password, table, columns, rowStart, rowEnd);
-			
+
 			Map<String, Object> transformerObj = transformers.get(0);
-			transformerOps = (List<String>) transformerObj.get(CLASS.getLabelName());
-			transformer.addAllTransformOp(transformerOps);
-		
+			transformerOps = (String) transformerObj.get(CLASS.getLabelName());
+			transformer.setTransformOp(transformerOps);
+
 			importer.build();
 			transformer.build();
 			exporter.build();
-			
+
 			Configuration.Builder configuration = Configuration.newBuilder();
 			configuration.setType("MySql");
 			configuration.setImporter(importer);
@@ -118,18 +117,15 @@ public class MySQLHelperProtobuf {
 			configuration.setExporter(exporter);
 			configuration.build();
 			//TODO: Change constructor you can pass configuration object directly
-			
-			mySQLTask = new MySQLTask(sourceConn, destinationConn, transformerOps.remove(0));
+
+			mySQLTask = new MySQLTask(sourceConn, destinationConn, transformerOps);
 			// TODO Ensure Non null parameters
 			// }
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
+
 		return mySQLTask;
 	}  
 }

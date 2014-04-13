@@ -68,7 +68,6 @@ public class HttpETL implements ETL {
 
 			int length = (int) m.getImporter().getDataCount();
 			int i=0;
-			System.out.println(">>>>>>>> " + m.getExporter().getDestination());
 			
 			while(i<length) {
 				String data = (String) m.getImporter().getData(i);
