@@ -7,4 +7,4 @@ Configuration :
   Port : 10002
 - Name : server3  
   IP   : 10.0.0.4
-  Port : 10003
+  Port : 10004

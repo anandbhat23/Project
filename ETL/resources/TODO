@@ -9,7 +9,6 @@ TODO(By Priority)
 Testing Scenarios
 
 FaultTolerance
-
 1) No Slaves
 2) Slave failure
 3) Master failure
