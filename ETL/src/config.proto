@@ -1,35 +1,35 @@
 package protobuf;
 
 option java_package = "protobuf";
-option java_outer_classname = "ConfigProtos";
+option java_outer_classname = "ProtoMessageConfig";
 
-message Configuration {
-	required string type = 1;
-	required Importer importer = 2;
-	required Transformer transformer = 3;
-	required Exporter exporter = 4;
+message ProtoMessage {
+	required Importer importer = 1;
+	required Exporter exporter = 2;
 }
 
 message Importer {
-  	optional string source = 1;
-  	optional string username = 2;
-  	optional string password = 3;
-  	optional string table = 4;
-  	repeated string column = 5;
-  	optional int32 rowStart = 6;
-  	optional int32 ronwEnd = 7;
-  	repeated string data = 8;
+  	required string type = 1;
+  	optional string location = 2;
+  	optional string username = 3;
+  	optional string password = 4;
+  	optional string table = 5;
+  	repeated string columns = 6;
+  	optional int32 rowStart = 7;
+  	optional int32 rowEnd = 8;
+  	repeated string data = 9;
 }
 
 message Transformer {
 	optional string transform_op = 1;
 }
 message Exporter {
-  	optional string source = 1;
-  	optional string username = 2;
-  	optional string password = 3;
-  	optional string table = 4;
-  	repeated string column = 5; 
-  	optional string destination = 6;
+	required string type = 1;
+  	optional string location = 2;
+  	optional string username = 3;
+  	optional string password = 4;
+  	optional string table = 5;
+  	repeated string columns = 6; 
+  	optional string destination = 7;
 }
 

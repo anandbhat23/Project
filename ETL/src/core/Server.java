@@ -1,16 +1,15 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.List;
+package core;
 
-import common.YamlParser;
+import merge.TaskTracker;
 
-import core.ETLJob;
-
-public class MasterController {
-
+public class Server {
+  
   public static void main(String args[]) {
-    MasterJobTracker jobTracker = new MasterJobTracker();
-    jobTracker.start();
+    
+	TaskTracker jobTracker = new TaskTracker(args[0], args[1]);
+	jobTracker.start();
+	jobTracker.handleClientConnection();
+    /*jobTracker.start();
 
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -38,6 +37,6 @@ public class MasterController {
       }
 
     }
-
+*/
   }
 }

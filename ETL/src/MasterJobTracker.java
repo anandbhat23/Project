@@ -3,10 +3,18 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import protobuf.ConfigProtos.Configuration;
+import protobuf.ProtoMessageConfig.ProtoMessage;
+import core.ETLJob;
 
 class MasterJobTracker {
 
@@ -26,7 +34,7 @@ class MasterJobTracker {
   private Map<Integer, String> slaveAddr = new HashMap<Integer, String>();
 
   // job id to job instance
-  private Map<Integer, ETL> idToJob = new HashMap<Integer, ETL>();
+  private Map<Integer, ETLJob> idToJob = new HashMap<Integer, ETLJob>();
 
   // job id to job's number of tasks
   private Map<Integer, Integer> jobSize = new HashMap<Integer, Integer>();
@@ -109,7 +117,7 @@ class MasterJobTracker {
     }
   }
 
-  public void newETLJob(ETL job, String classname) {
+  public void newETLJob(ETLJob job, String classname) {
 
     int jid = nextjobid++;
     idToJob.put(jid, job);
@@ -120,14 +128,13 @@ class MasterJobTracker {
     distributeETLTasks(jid, job, classname);
   }
 
-  public void distributeETLTasks(int jid, ETL job, String classname) {
+  public void distributeETLTasks(int jid, ETLJob job, String classname) {
 
     // TODO: buffer limit . when all slaves are busy.we buffer the task.
-
     int taskid = 0;
     int taskcount = 0;
-    Configuration m;
-    while ((m = job.importer()) != null) {
+    ProtoMessage m;
+    while ((m = job.getNextMessage()) != null) {
 
       ETLTask task = new ETLTask(taskid++, jid, classname, m);
 

@@ -3,17 +3,17 @@ package common;
 public enum YamlLabel {
 	IMPORTER("importer"),
 	EXPORTER("exporter"),
+	TYPE("type"),
 	TRANSFORMER("transformer"),
 	CLASS("class"),
-	SOURCE("src"),
+	LOCATION("location"),
 	USERNAME("username"),
 	PASSWORD("password"),
 	TABLE("table"),
 	COLUMNS("columns"),
 	ROW_START("rowStart"),
   	ROW_END("rowEnd"),
-	DATA("data"),
-	DESTINATION ("dest");
+	DATA("data");
 	
 	private String lableName;
 

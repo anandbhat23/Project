@@ -1,0 +1,12 @@
+package core;
+public enum MessageType {
+
+  MsgOK,
+
+  MsgHeartBeat,
+
+  MsgData, MsgTaskStart, MsgTaskFinish, MsgTask,
+
+  MsgTaskFailure, MsgJobFailure
+
+}

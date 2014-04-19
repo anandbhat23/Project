@@ -1,7 +1,0 @@
-
-class :
-  - class : HttpETL
-
-importer :
-  - src :  src/sample.txt
- 
