@@ -1,0 +1,15 @@
+TODO(By Priority)
+
+1) Bootstrap
+2) Leader Election merge
+3) Integrate with UI(Notifying master, sending slave statuses and Job status)
+4) Transformation suppport
+4) Send Protobuf over the wire and not ETLTask
+
+Testing Scenarios
+
+FaultTolerance
+
+1) No Slaves
+2) Slave failure
+3) Master failure
