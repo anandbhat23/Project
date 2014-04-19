@@ -1,0 +1,7 @@
+importer :
+ - type : HTTP
+   source :  src/sample.txt
+
+exporter :
+ - type : HTTP
+   destination :  src/output.txt

@@ -1,0 +1,18 @@
+classType :
+  - type : HttpETL
+
+importer :
+  - src :  src/sample.txt
+  
+transformer :
+  - class : Average
+  
+exporter :
+  - src :  localhost:3306
+    username : root
+    password : MySql@Passw0rd
+    table : etl.studentinfo
+    columns : 
+       - id
+       - grade
+    dest : src/output.txt     

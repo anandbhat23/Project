@@ -1,0 +1,25 @@
+importer : 
+ - type : MySQL
+   location :  localhost:3306
+   username : root
+   password : MySql@Passw0rd
+   table : etl.studentinfo
+   columns : 
+     - id
+     - subject1
+     - subject2
+     - subject3
+   rowStart : 1
+   rowEnd : 5
+
+exporter :
+ - type : MySQL
+   location :  localhost:3306
+   username : root
+   password : MySql@Passw0rd
+   table : etl.studentgrades
+   columns : 
+    - id
+    - subject1
+    - subject2
+    - subject3
