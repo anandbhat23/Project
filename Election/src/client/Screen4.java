@@ -2,18 +2,14 @@ package client;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D;
 
 import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,7 +21,6 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
 
 
 /**
@@ -64,6 +59,8 @@ public class Screen4 extends JFrame implements ActionListener {
 	
 	
 	private JButton LButton1;
+	private AbstractAction viewResult;
+	private JButton View;
 	private JTextPane jTextPane1;
 	private JButton TButton1;
 	private JButton EButton1;
@@ -145,8 +142,15 @@ public class Screen4 extends JFrame implements ActionListener {
 			        .addComponent(getSlaveButton4(), GroupLayout.Alignment.BASELINE, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE))
 			    .addComponent(getJButton1x(), GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))
 			.addGap(93)
-			.addComponent(getJTextPane1(), GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)
-			.addContainerGap(40, Short.MAX_VALUE));
+			.addGroup(contentPaneLayout.createParallelGroup()
+			    .addGroup(contentPaneLayout.createSequentialGroup()
+			        .addComponent(getJTextPane1(), GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)
+			        .addGap(0, 0, Short.MAX_VALUE))
+			    .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
+			        .addGap(132)
+			        .addComponent(getView(), GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+			        .addGap(0, 57, Short.MAX_VALUE)))
+			.addContainerGap(40, 40));
 		contentPaneLayout.setHorizontalGroup(contentPaneLayout.createSequentialGroup()
 			.addContainerGap(65, 65)
 			.addGroup(contentPaneLayout.createParallelGroup()
@@ -172,15 +176,19 @@ public class Screen4 extends JFrame implements ActionListener {
 			                .addComponent(getSlaveButton4(), GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
 			                .addGap(42)))
 			        .addGap(28)))
-			.addGap(206)
+			.addGap(133)
 			.addGroup(contentPaneLayout.createParallelGroup()
+			    .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
+			        .addGap(0, 0, Short.MAX_VALUE)
+			        .addComponent(getView(), GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+			        .addGap(38))
 			    .addGroup(contentPaneLayout.createSequentialGroup()
-			        .addComponent(getJButton1x(), GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
-			    .addGroup(contentPaneLayout.createSequentialGroup()
-			        .addComponent(getTButton1(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
-			    .addGroup(contentPaneLayout.createSequentialGroup()
-			        .addComponent(getEButton1(), GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)))
-			.addContainerGap(6, Short.MAX_VALUE));
+			        .addGap(0, 73, Short.MAX_VALUE)
+			        .addGroup(contentPaneLayout.createParallelGroup()
+			            .addComponent(getJButton1x(), GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
+			            .addComponent(getTButton1(), GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+			            .addComponent(getEButton1(), GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))))
+			.addContainerGap());
 
 		setContentPane(contentPane);
 		contentPane.setPreferredSize(new java.awt.Dimension(480, 327));
@@ -196,16 +204,7 @@ public class Screen4 extends JFrame implements ActionListener {
 		timer4.start();
 	}
 	
-	private AbstractAction getCancelAction() {
-		if(cancelAction == null) {
-			cancelAction = new AbstractAction("Cancel", null) {
-				public void actionPerformed(ActionEvent evt) {
-					System.exit(0);
-				}
-			};
-		}
-		return cancelAction;
-	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -374,10 +373,30 @@ public class Screen4 extends JFrame implements ActionListener {
 			  jTextPane1.setText("DISTRIBUTED ETL");
 			  jTextPane1.setBounds(20,	20, 50, 50);
 			  
-//			  JScrollPane scrolltxt = new JScrollPane(jTextPane1);
+//				  JScrollPane scrolltxt = new JScrollPane(jTextPane1);
 		  }
 		  return jTextPane1;
 	  }
+	  
+	  private JButton getView() {
+		  if(View == null) {
+			  View = new JButton();
+			  View.setText("View Results");
+			  View.setAction(getViewResult());
+		  }
+		  return View;
+	  }
+	  
+	  private AbstractAction getViewResult() {
+		  if(viewResult == null) {
+			  viewResult = new AbstractAction("viewResult", null) {
+				  public void actionPerformed(ActionEvent evt) {
+					  Screen5 frame5 = new Screen5();
+					  frame5.setVisible(true);
+				  }
+			  };
+		  }
+		  return viewResult;
+	  }
 
-	 
 }
