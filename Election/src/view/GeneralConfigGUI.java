@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 public class GeneralConfigGUI extends JPanel{
+	
 	private JPanel importerPanel;
 	private JPanel transformerPanel;
 	private JPanel exporterPanel;
@@ -19,6 +20,7 @@ public class GeneralConfigGUI extends JPanel{
 	private JButton submitButton;
 	private Integer windowWidth;
 	private Integer windowHeight;
+	
 	
 	
 	private final String IMPORTER_LABEL = "Importer";
@@ -31,6 +33,8 @@ public class GeneralConfigGUI extends JPanel{
 		
 		importerPanel = new JPanel();
 		importerPanel.setBorder(BorderFactory.createTitledBorder(IMPORTER_LABEL));
+		importerPanel.setLayout(new BorderLayout());
+		importerPanel.add(new ImporterMySqlConfigGUI(), BorderLayout.CENTER);
 		
 		transformerPanel = new JPanel();
 		transformerPanel.setBorder(BorderFactory.createTitledBorder(TRANSFORMER_LABEL));

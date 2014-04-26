@@ -29,6 +29,8 @@ public class Constants {
 	public final static Integer CONFIG_LIST_WIDTH = WINDOW_WIDTH;
 	public final static Integer CONFIG_LIST_HEIGHT = WINDOW_HEIGHT/3;
 	public final static Integer TOP_PADDING_HEIGHT = 50;
+	public final static Integer GAP_PADDING_HEIGHT = 20;
+	public final static Integer GAP_PADDING_WIDTH = 20;
 	public final static Integer CONFIGLIST_VISIBLE_ROW_COUNT = 11;
 	
 	public final static String LABEL_APP = "Distributed ETL";
@@ -47,4 +49,12 @@ public class Constants {
 	public final static String MENU_HELP_ABOUT = "About";
 	public final static String MENU_HELP_HELP = "Help";
 	public final static String LIST_CONFIG_LABEL = "Config File List";
+	public final static String USER_NAME_LABEL = "User Name";
+	public final static String PASSWORD_LABEL = "Password";
+	public final static String TABLE_NAME_LABEL = "Database and Table Name";
+	public final static String ROW_START_LABEL = "Start Row Number";
+	public final static String ROW_END_LABEL = "End Row Number";
+	public final static String COLUMN_LABEL = "Import Columns";
+	public final static String DATA_TYPE_LABEL = "Data Type";
+	public final static String DATA_LOCATION_LABEL = "Data Location";
 }
