@@ -1,83 +1,79 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JScrollPane;
 
-import utils.General;
 
 public class SelectConfigGUI extends JPanel{
-	private JButton newButton;
-	private JButton startButton;
+	private SelectConfigButtonPanel selectConfigButtonPanel;
 	private JList configList;
-	private JFileChooser configChooser;
-	private MouseListener listener; 
+	private JScrollPane configScrollPane;
+	private DefaultListModel model;
+	private Integer windowWidth;
+	private Integer windowHeight;
 	
 	public SelectConfigGUI() {
-		newButton = new JButton(Constants.BUTTON_NEW_TEXT);
-		newButton.setSize(Constants.NEW_BUTTON_WIDTH, Constants.NEW_BUTTON_HEIGHT);
-		startButton = new JButton(Constants.BUTTON_START_TEXT);
-		startButton.setSize(Constants.START_BUTTON_WIDTH, Constants.START_BUTTON_HEIGHT);
-		configList = new JList(Constants.DATATYPE_OPTION);
-		configList.setSize(Constants.CONFIG_LIST_WIDTH, Constants.CONFIG_LIST_HEIGHT);
+		this.selectConfigButtonPanel = new SelectConfigButtonPanel();
+		this.model = new DefaultListModel();
+		this.configList = new JList(model);
+		this.configScrollPane = new JScrollPane(configList);
+		this.windowWidth = Constants.SELECTP_WIDTH;
+		this.windowHeight = Constants.SELECTP_HEIGHT;
+		setComponents();
+		createView();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public SelectConfigGUI(DefaultListModel model, Integer windowWidth, Integer windowHeight) {
+		this.windowWidth = windowWidth;
+		this.windowHeight = windowHeight;
+		this.selectConfigButtonPanel = new SelectConfigButtonPanel(windowWidth);
+		this.model = model;
+		this.configList = new JList(model);
+		this.configScrollPane = new JScrollPane(configList);
+		
+		setComponents();
+		createView();
+	}
+	
+	private void setConfigList() {
+		configList.setVisibleRowCount(Constants.CONFIGLIST_VISIBLE_ROW_COUNT);
 		configList.setBorder(BorderFactory.createTitledBorder(Constants.LIST_CONFIG_LABEL));
-		configChooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		    "YAML Config File", "yaml");
-		configChooser.setFileFilter(filter);
-
-//		newButton.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				super.mouseClicked(e);
-//				SelectConfigGUI.this.setVisible(false);
-//				SelectConfigGUI.this.parent.add(new GeneralConfigGUI());
-//			}
-//		});
-		
-
-		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.add(newButton);
-		this.add(configList);
-		this.add(startButton);
-		this.add(Box.createRigidArea(new Dimension(0, Constants.CENTER_HEIGHT*2/3)));
 	}
 	
-	public void addNewButtonClickListener(MouseListener listener) {
-		newButton.addMouseListener(listener);
+	public void setConfigFileList(String[] configFileList) {
+		configList.setListData(configFileList);
 	}
 	
-//	public void temp() {
-//		int returnVal = configChooser.showOpenDialog(this);
-//		if(returnVal == JFileChooser.APPROVE_OPTION) {
-//		   General.log("You chose to open this file: " +
-//		        configChooser.getSelectedFile().getName());
-//		}
-//	}
+	public void addConfigFileList(String configFileName) {
+		model.addElement(configFileName);
+	}
+	
+	private void setComponents() {
+		setConfigList();
+	}
+	
+	private void createView() {
+		this.setLayout(new BorderLayout());
+		this.add(configScrollPane, BorderLayout.NORTH);
+		this.add(selectConfigButtonPanel, BorderLayout.SOUTH);
+	}
+	
+	public SelectConfigButtonPanel getSelectConfigButtonPanel(){
+		return selectConfigButtonPanel;
+	}
+	
 	
 	public static void main(String[] args) {
-		WindowGUI gui = new WindowGUI();
+		WindowGUI gui = new WindowGUI(client.Constants.SELECT_CONFIG_GUI_WIDTH, client.Constants.SELECT_CONFIG_GUI_HEIGHT);
 		gui.add(new SelectConfigGUI());
 		gui.setVisible(true);
 	}
+	
 }

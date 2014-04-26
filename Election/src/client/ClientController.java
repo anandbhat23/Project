@@ -3,34 +3,54 @@ package client;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
 import view.GeneralConfigGUI;
 import view.SelectConfigGUI;
 import view.WindowGUI;
 
-public class ClientController {
+public class ClientController implements Runnable {
 	private WindowGUI gui;
 	private GeneralConfigGUI generalConfigGUI;
 	private SelectConfigGUI selectConfigGUI;
+	private ClientModel clientModel;
 	
 	public ClientController() {
-		gui = new WindowGUI();
+		gui = new WindowGUI(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
+		clientModel = new ClientModel();
 		generalConfigGUI = new GeneralConfigGUI();
-		selectConfigGUI = new SelectConfigGUI();
-		gui.add(selectConfigGUI);
+		selectConfigGUI = new SelectConfigGUI(clientModel.getConfigListModel(), Constants.SELECT_CONFIG_GUI_WIDTH,  Constants.SELECT_CONFIG_GUI_HEIGHT);
 		
+	}
+	
+	/**
+	 * method to save user input config parameters into object / save to file
+	 */
+	public void saveConfig(){
+		
+	}
+	
+	public void addListeners() {
 		/**
 		 * handler for clicks on new button to create ETL config file
 		 */
-		selectConfigGUI.addNewButtonClickListener(new MouseAdapter() {
+		selectConfigGUI.getSelectConfigButtonPanel().addNewButtonClickListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 				super.mouseClicked(e);
 				selectConfigGUI.setVisible(false);
-				gui.remove(selectConfigGUI);
-				gui.add(generalConfigGUI);
-				gui.setVisible(true);
+				
+				// adjust window size
+				gui.setSize(Constants.GENERAL_CONFIG_GUI_WIDTH, Constants.GENERAL_CONFIG_GUI_HEIGHT);
+				// add new content
+				gui.setContentPane(generalConfigGUI);
+				gui.setLocationRelativeTo(null);
+				// make screen visible
+				generalConfigGUI.setVisible(true);
+				
 			}
 			
 		});
@@ -42,31 +62,24 @@ public class ClientController {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 				super.mouseClicked(e);
 				saveConfig();
-				gui.remove(generalConfigGUI);
-				gui.add(selectConfigGUI);
-				gui.setVisible(true);
+				generalConfigGUI.setVisible(false);
+				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
+				gui.setContentPane(selectConfigGUI);
+				selectConfigGUI.setVisible(true);
 			}
 		});
-		
-	}
-	
-	/**
-	 * method to save user input config parameters into object / save to file
-	 */
-	public void saveConfig(){
-		
 	}
 	
 	public void run() {
+		addListeners();
+		gui.setContentPane(selectConfigGUI);
 		gui.setVisible(true);
 	}
 	
 	
 	public static void main(String[] args) {
-		ClientController clientController = new ClientController();
-		clientController.run();
+		SwingUtilities.invokeLater(new ClientController());
 	}
 }

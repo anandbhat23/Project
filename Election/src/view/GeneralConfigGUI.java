@@ -17,6 +17,9 @@ public class GeneralConfigGUI extends JPanel{
 	private JPanel exporterPanel;
 	private JPanel buttonPanel;
 	private JButton submitButton;
+	private Integer windowWidth;
+	private Integer windowHeight;
+	
 	
 	private final String IMPORTER_LABEL = "Importer";
 	private final String TRANSFORMER_LABEL = "Transformer";

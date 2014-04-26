@@ -19,19 +19,26 @@ public class Constants {
 	public final static Integer EXPORTP_WIDTH = DETAILP_WIDTH;
 	public final static Integer EXPORTP_HEIGHT = IMEXP_HEIGHT/2;
 	public final static Integer START_BUTTON_WIDTH = 200;
-	public final static Integer START_BUTTON_HEIGHT = 80;
+	public final static Integer START_BUTTON_HEIGHT = 100;
 	public final static Integer NEW_BUTTON_WIDTH = 200;
 	public final static Integer NEW_BUTTON_HEIGHT = 80;
-	public final static Integer CONFIG_LIST_WIDTH = WINDOW_WIDTH/2;
-	public final static Integer CONFIG_LIST_HEIGHT = WINDOW_HEIGHT/2;
-	
+	public final static Integer REMOVE_BUTTON_WIDTH = 200;
+	public final static Integer REMOVE_BUTTON_HEIGHT = 80;
+	public final static Integer CHOOSE_BUTTON_WIDTH = 200;
+	public final static Integer CHOOSE_BUTTON_HEIGHT = 80;
+	public final static Integer CONFIG_LIST_WIDTH = WINDOW_WIDTH;
+	public final static Integer CONFIG_LIST_HEIGHT = WINDOW_HEIGHT/3;
+	public final static Integer TOP_PADDING_HEIGHT = 50;
+	public final static Integer CONFIGLIST_VISIBLE_ROW_COUNT = 11;
 	
 	public final static String LABEL_APP = "Distributed ETL";
 	public final static String[] DATATYPE_OPTION = { "HTTP", "MYSQL", "HBASE" };
 	public final static String DATATYPE_SRC_LABEL = "Src Type";
 	public final static String DATATYPE_DEST_LABEL = "Dest Type";
 	public final static String BUTTON_START_TEXT = "Start";
-	public final static String BUTTON_NEW_TEXT = "New Config File";
+	public final static String BUTTON_NEW_TEXT = "New";
+	public final static String BUTTON_REMOVE_TEXT = "Remove";
+	public final static String BUTTON_CHOOSE_TEXT = "Choose from file";
 	public final static String LABEL_IMPORT = "Import";
 	public final static String LABEL_EXPORT = "Export";
 	public final static String MENU_FILE = "File";
