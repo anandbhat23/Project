@@ -1,7 +1,7 @@
 importer :
  - type : HTTP
-   source :  src/sample.txt
+   location :  resources/sample.txt
 
 exporter :
  - type : HTTP
-   destination :  src/output.txt
+   location :  resources/output.txt

@@ -1,8 +1,12 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,12 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import protobuf.ProtoMessageConfig.ProtoMessage;
 import core.ETLJob;
+import common.YamlParser;
 
-class MasterJobTracker {
+
+public class MasterJobTracker {
 
   private static final int TASK_PER_SLAVE = 3;
-  private static final int TIMEOUT = 3000; //ms
-  private static final int MASTER_PORT = 12345;
+  private static final int TIMEOUT = 2000; //ms
+  private int MASTER_PORT = 12345;
 
   private int nextjobid = 0;
 
@@ -47,16 +53,36 @@ class MasterJobTracker {
   // TODO: Do we need to store those tasks?
   private TreeMap<Integer, List<Task>> taskFinishedQueue = new TreeMap<Integer, List<Task>>();
 
+  private String localhost;
+  private PrintWriter logger;
+  
   public MasterJobTracker() {
 
     try {
       // TODO : should get from system config file
-      String localhost = InetAddress.getLocalHost().getHostAddress();
-      slaveAddr.put(0, localhost + ":15619");
-      slaveAddr.put(1, localhost + ":15719");
-      slaveLoadMap.put(0, new LinkedList<Task>());
-      slaveLoadMap.put(1, new LinkedList<Task>());
+      logger = new PrintWriter("resources/log", "UTF-8");
+
+      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      String[] ms = br.readLine().split(":");
+      localhost = InetAddress.getLocalHost().getHostAddress();
+      if(ms[1].equals("localhost"))
+        ms[1] = localhost;
+      MASTER_PORT = Integer.parseInt(ms[2]);
+      String line = br.readLine();
+      int sid = 0;
+      while (line != null) {
+        ms = line.split(":");
+        if(ms[1].equals("localhost"))
+          ms[1] = InetAddress.getLocalHost().getHostAddress();
+        slaveAddr.put(sid, ms[1]+":"+ms[2]);
+        slaveLoadMap.put(sid, new LinkedList<Task>());
+        sid++;
+        line = br.readLine();
+      } 
+      br.close();
+      
     } catch (Exception e) {
+      
       e.printStackTrace();
     }
 
@@ -121,7 +147,9 @@ class MasterJobTracker {
 
     int jid = nextjobid++;
     idToJob.put(jid, job);
-
+    
+    logger.println(jid+","+classname+","+ "0");
+    logger.flush();
     taskWaitQueue.put(jid, new LinkedList<Task>());
     taskFinishedQueue.put(jid, new LinkedList<Task>());
 
@@ -269,6 +297,38 @@ class MasterJobTracker {
           // System.out.println("Get Msg Heart Beat from sid=" +slaveid);
           heartbeatMap.put(slaveid, System.currentTimeMillis());
         }
+        
+        else if (type == MessageType.MsgNewJob) {
+          String conf_name = (String) msg.getObj();
+          System.out.println("master starts a new job! " + conf_name);
+          List<ETLJob> etlJobs = YamlParser.parse(conf_name);
+          for(ETLJob etlJob : etlJobs){
+            newETLJob(etlJob, "");
+          }
+        }
+        
+        else if (type == MessageType.MsgNewSlaveRequest) {
+          String new_addr = (String) msg.getObj();
+          System.out.println("master get new slave! " + new_addr);
+          int sid = slaveAddr.size();
+          slaveAddr.put(sid, new_addr);
+          slaveLoadMap.put(sid, new LinkedList<Task>());
+          
+          
+          ArrayList<String> addrs = new ArrayList<String>();
+          for(int k : slaveAddr.keySet()) {
+            addrs.add(slaveAddr.get(k));
+          }
+            
+          ETLMessage m = new ETLMessage(MessageType.MsgNewSlaveUpdate, addrs, localhost+":"+MASTER_PORT);
+
+          for(int i=0;i<sid+1;i++) {
+          
+             SendMsgToSlave(m, i);
+          }
+          
+        }
+
 
       } catch (Exception e) {
         e.printStackTrace();
@@ -317,6 +377,10 @@ class MasterJobTracker {
       // clean up here
       terminatedJobs.add(jid);
       taskFinishedQueue.remove(jid);
+      
+      logger.println(jid+","+","+ "1");
+      logger.flush();
+      
     }
   }
 
@@ -392,6 +456,59 @@ class MasterJobTracker {
         slaveLoadMap.get(freeSlave).add(t);
         ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, t, null);
         SendMsgToSlave(msg, freeSlave);
+      }
+    }
+
+  }
+  
+  public void restart(List<String> slave_addr) {
+    
+    int sid = 0;
+    for(String s: slave_addr) {
+      slaveAddr.put(sid,s);
+      slaveLoadMap.put(sid, new LinkedList<Task>());
+      sid++;
+    }
+    
+    ListenerThread listener = new ListenerThread();
+    listener.start();
+    
+    //Heartbeat check timer
+    Timer timer = new Timer();
+    timer.schedule(new HeartBeatCheckTimer(), 15 * 1000, // initial delay
+        2 * 1000); // subsequent rate
+
+    int largest_jid = 0;
+    HashMap<Integer, String> jobstatus = new HashMap<Integer, String>();
+    try {
+      BufferedReader br = new BufferedReader(new FileReader("resources/log"));
+      String line = br.readLine();
+      while (line != null) {
+        String[] status = line.split(",");
+        int jid = Integer.parseInt(status[0]);
+        largest_jid = Math.max(largest_jid, jid);
+        String conf_name = status[1];
+        String stat = status[2];
+
+        if (stat.equals("0")) {
+          jobstatus.put(jid, conf_name);
+        }
+        if (stat.equals("1")) {
+          jobstatus.remove(jid);
+        }
+      }
+      br.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    this.nextjobid = largest_jid+1;
+    
+    for(int jid : jobstatus.keySet()) {
+      String conf_name = jobstatus.get(jid);
+      List<ETLJob> etlJobs = YamlParser.parse(conf_name);
+      for(ETLJob etlJob : etlJobs){
+        newETLJob(etlJob, "");
       }
     }
 

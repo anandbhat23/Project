@@ -27,7 +27,7 @@ public class HTTPExporter implements Exporter {
 	public void export(List<Map<String, String>> dataList) {
 		BufferedWriter bw = null;
 		try {
-			File file = new File(httpData.getLocation());
+			File file = new File("resources/final");
 			if (!file.exists()) {
 				file.createNewFile();
 			}
