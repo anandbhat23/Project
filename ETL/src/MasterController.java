@@ -28,7 +28,7 @@ public class MasterController {
           String conf_name = jobArgs[1];
           List<ETLJob> etlJobs = YamlParser.parse(conf_name);
           for(ETLJob etlJob : etlJobs){
-        	  jobTracker.newETLJob(etlJob, "");
+        	  jobTracker.newETLJob(etlJob, conf_name);
           }
           System.out.println("Job started!");
           continue;

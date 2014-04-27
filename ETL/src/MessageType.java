@@ -6,6 +6,12 @@ public enum MessageType {
 
   MsgData, MsgTaskStart, MsgTaskFinish, MsgTask,
 
-  MsgTaskFailure, MsgJobFailure
+  MsgTaskFailure, MsgJobFailure,
+  
+  MsgElection, MsgAnswer, MsgVictory,
+  
+  MsgNewJob,
+  
+  MsgNewSlaveRequest, MsgNewSlaveUpdate
 
 }
