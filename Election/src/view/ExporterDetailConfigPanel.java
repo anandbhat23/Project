@@ -10,7 +10,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class ExporterMySqlConfigPanel extends GeneralExportConfigPanel{
+import config.ClientConfigDataType;
+import config.ClientHttpExporter;
+import config.ClientHttpImporter;
+import config.ClientMySqlExporter;
+import config.ClientMySqlImporter;
+
+public class ExporterDetailConfigPanel extends GeneralExportConfigPanel{
 	private JPanel detailInfoPanel;
 	private JPanel detailLeftPanel;
 	private JPanel accountInfoPanel;
@@ -20,8 +26,14 @@ public class ExporterMySqlConfigPanel extends GeneralExportConfigPanel{
 	private JTextField tableNameTextField;
 	private JTextArea columnsTextArea;
 	private JScrollPane columnScrollPane;
+	private ClientMySqlExporter mySqlExporterConfig;
+	private ClientHttpExporter httpExporterConfig;
 		
-	public ExporterMySqlConfigPanel() {
+	public ExporterDetailConfigPanel() {
+		
+//		this.createClientConfigExporter(ClientConfigDataType.MYSQL);
+		mySqlExporterConfig = new ClientMySqlExporter();
+		httpExporterConfig = new ClientHttpExporter();
 		detailInfoPanel = new JPanel();
 		detailLeftPanel = new JPanel();
 		accountInfoPanel = new JPanel();
@@ -37,6 +49,7 @@ public class ExporterMySqlConfigPanel extends GeneralExportConfigPanel{
 	}
 	
 	public void setMySqlDetailConfigGUI() {
+		this.setDataType(ClientConfigDataType.MYSQL); // default
 		userNameTextField.setBorder(BorderFactory.createTitledBorder(Constants.USER_NAME_LABEL));
 		passwordTextField.setBorder(BorderFactory.createTitledBorder(Constants.PASSWORD_LABEL));
 		tableNameTextField.setBorder(BorderFactory.createTitledBorder(Constants.TABLE_NAME_LABEL));
@@ -83,9 +96,70 @@ public class ExporterMySqlConfigPanel extends GeneralExportConfigPanel{
 		this.add(detailInfoPanel);
 	}
 	
+	public String getUserName(){
+		return userNameTextField.getText();
+	}
+	
+	public String getPassword() {
+		return passwordTextField.getText();
+	}
+	
+	public String getTableName() {
+		return tableNameTextField.getText();
+	}
+	
+	public String getColumns() {
+		return columnsTextArea.getText();
+	}
+	
+	public void resetUserName() {
+		userNameTextField.setText("");
+	}
+	
+	public void resetPassword() {
+		passwordTextField.setText("");
+	}
+	
+	public void resetTable() {
+		tableNameTextField.setText("");
+	}
+	
+	public void resetColumns() {
+		columnsTextArea.setText("");
+	}
+
+	@Override
+	public void setClientConfigExporter() {
+		if (this.getDataType().equals(ClientConfigDataType.MYSQL)) {
+			ClientMySqlExporter exporter = mySqlExporterConfig;
+			exporter.setLocation(this.getDataLocation());
+			exporter.setUserName(this.getUserName());
+			exporter.setPassword(this.getPassword());
+			exporter.setTable(this.getTableName());
+			exporter.setColumns(this.getColumns());
+			this.clientConfigExporter = exporter;
+			System.out.println("Storing MySQL Export Data");
+		} else if (this.getDataType().equals(ClientConfigDataType.HTTP)) {
+			ClientHttpExporter exporter = httpExporterConfig;
+			exporter.setExporterType(ClientConfigDataType.HTTP);
+			exporter.setLocation(this.getDataLocation());
+			this.clientConfigExporter = exporter;
+			System.out.println("Storing HTTP Export Data");
+		}
+	}
+	
+	@Override
+	public void resetExporterConfigGUI() {
+		this.resetDataLocation();
+		this.resetUserName();
+		this.resetPassword();
+		this.resetTable();
+		this.resetColumns();
+	}
+	
 	public static void main(String args[]) {
 		WindowGUI gui = new WindowGUI();
-		gui.setContentPane(new ExporterMySqlConfigPanel());
+		gui.setContentPane(new ExporterDetailConfigPanel());
 		gui.setVisible(true);
 	}
 }

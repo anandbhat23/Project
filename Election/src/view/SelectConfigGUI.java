@@ -14,14 +14,14 @@ public class SelectConfigGUI extends JPanel{
 	private SelectConfigButtonPanel selectConfigButtonPanel;
 	private JList configList;
 	private JScrollPane configScrollPane;
-	private DefaultListModel model;
+	private DefaultListModel selectConfigFileModel;
 	private Integer windowWidth;
 	private Integer windowHeight;
 	
 	public SelectConfigGUI() {
 		this.selectConfigButtonPanel = new SelectConfigButtonPanel();
-		this.model = new DefaultListModel();
-		this.configList = new JList(model);
+		this.selectConfigFileModel = new DefaultListModel();
+		this.configList = new JList(selectConfigFileModel);
 		this.configScrollPane = new JScrollPane(configList);
 		this.windowWidth = Constants.SELECTP_WIDTH;
 		this.windowHeight = Constants.SELECTP_HEIGHT;
@@ -34,7 +34,7 @@ public class SelectConfigGUI extends JPanel{
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		this.selectConfigButtonPanel = new SelectConfigButtonPanel(windowWidth);
-		this.model = model;
+		this.selectConfigFileModel = model;
 		this.configList = new JList(model);
 		this.configScrollPane = new JScrollPane(configList);
 		
@@ -52,7 +52,7 @@ public class SelectConfigGUI extends JPanel{
 	}
 	
 	public void addConfigFileList(String configFileName) {
-		model.addElement(configFileName);
+		selectConfigFileModel.addElement(configFileName);
 	}
 	
 	private void setComponents() {
@@ -67,6 +67,10 @@ public class SelectConfigGUI extends JPanel{
 	
 	public SelectConfigButtonPanel getSelectConfigButtonPanel(){
 		return selectConfigButtonPanel;
+	}
+	
+	public String getSelectedConfigFileName(){
+		return (String) configList.getSelectedValue();
 	}
 	
 	

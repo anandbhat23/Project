@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,6 +18,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import config.ClientConfigDataType;
+import config.ClientConfigExporter;
+import config.ClientConfigFileFactory;
 
 public abstract class GeneralExportConfigPanel extends JPanel{
 	private JPanel basicInfoPanel;
@@ -23,6 +27,8 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 	private JTextField dataLocationField;
 	private Integer panelWidth;
 	private Integer panelHeight;
+	private ClientConfigDataType dataType;
+	protected ClientConfigExporter clientConfigExporter;
 	
 	
 	public GeneralExportConfigPanel() {
@@ -32,7 +38,7 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 		dataTypeList = new JComboBox(ClientConfigDataType.values());
 		dataLocationField = new JTextField();
 		setDetailConfigGUI();
-		createView();
+		createGeneralExportConfigPanel();
 	}
 	
 	public GeneralExportConfigPanel(Integer panelWidth, Integer panelHeight) {
@@ -41,7 +47,7 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 		basicInfoPanel = new JPanel();
 		dataLocationField = new JTextField();
 		setDetailConfigGUI();
-		createView();
+		createGeneralExportConfigPanel();
 	}
 	
 	public Integer getPanelWidth() {
@@ -68,6 +74,7 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 		dataLocationField.setColumns(20);
 		
 		dataTypeList.setEditable(false);
+		dataTypeList.setSelectedItem(ClientConfigDataType.MYSQL);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		basicInfoPanel.setLayout(new GridBagLayout());
@@ -88,8 +95,40 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 		this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 	}
 	
-	public void createView() {
+	public void createGeneralExportConfigPanel() {
 		this.add(basicInfoPanel);
 	}
 	
+	public void setDataType(ClientConfigDataType dataType){
+		this.dataType = dataType;
+	}
+	
+	public ClientConfigDataType getDataType() {
+		return dataType;
+	}
+	
+	public String getDataLocation() {
+		return dataLocationField.getText();
+	}
+	
+	public void createClientConfigExporter(ClientConfigDataType dataType) {
+		clientConfigExporter = ClientConfigFileFactory.createClientExporter(dataType);
+	}
+	
+	
+	public void resetDataLocation() {
+		dataLocationField.setText("");
+	}
+	
+	public abstract void setClientConfigExporter();
+	
+	public ClientConfigExporter getClientConfigExporter() {
+		return clientConfigExporter;
+	}
+	
+	public void addDataTypeListActionListener(ItemListener listener) {
+		dataTypeList.addItemListener(listener);
+	}
+	
+	public abstract void resetExporterConfigGUI();
 }

@@ -57,11 +57,13 @@ public class Constants {
 	public final static String TABLE_NAME_LABEL = "Database and Table Name";
 	public final static String ROW_START_LABEL = "Start Row Number";
 	public final static String ROW_END_LABEL = "End Row Number";
-	public final static String COLUMN_LABEL = "Import Columns";
+	public final static String COLUMN_LABEL = "Columns";
 	public final static String DATA_TYPE_LABEL = "Data Type";
 	public final static String DATA_LOCATION_LABEL = "Data Location";
 	public final static String IMPORTER_NAME_LABEL = "Importer Name";
 	public final static String IMPORTER_LIST_LABEL = "Importer List";
 	public final static String ADD_LABEL = "Add";
 	public final static String IMPORTER_EXPORTER_LIST_LABEL = "Importer List";
+	public final static String TRANSFORMER_SCRIPT_LABEL = "Transformer Script";
+	public final static String CONFIG_FILE_NAME_LABEL = "Config File Name";
 }

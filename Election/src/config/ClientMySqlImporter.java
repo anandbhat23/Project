@@ -66,4 +66,5 @@ public class ClientMySqlImporter extends ClientConfigImporter{
 	public Integer getRowEnd() {
 		return rowEnd;
 	}
+
 }

@@ -78,4 +78,8 @@ public class SelectConfigButtonPanel extends JPanel{
 	public void addNewButtonClickListener(MouseListener listener) {
 		newButton.addMouseListener(listener);
 	}
+	
+	public void addRemoveButtonClickListener(MouseListener listener) {
+		removeButton.addMouseListener(listener);
+	}
 }

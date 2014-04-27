@@ -13,4 +13,14 @@ public enum ClientConfigDataType {
 	public String getType() {
 		return type;
 	}
+	
+	public static ClientConfigDataType getDataType(String dataType) {
+		ClientConfigDataType type = null;
+		if (dataType.equals("HTTP")) {
+			type =  HTTP;
+		} else if (dataType.equals("MYSQL")) {
+			type =  MYSQL;
+		}
+		return type;
+	}
 }
