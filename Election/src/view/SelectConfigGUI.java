@@ -44,7 +44,8 @@ public class SelectConfigGUI extends JPanel{
 	
 	private void setConfigList() {
 		configList.setVisibleRowCount(Constants.CONFIGLIST_VISIBLE_ROW_COUNT);
-		configList.setBorder(BorderFactory.createTitledBorder(Constants.LIST_CONFIG_LABEL));
+		configScrollPane.setPreferredSize(new Dimension(Constants.SELECTP_WIDTH, Constants.SELECTP_HEIGHT / 3*2));
+		configScrollPane.setBorder(BorderFactory.createTitledBorder(Constants.LIST_CONFIG_LABEL));
 	}
 	
 	public void setConfigFileList(String[] configFileList) {

@@ -38,8 +38,8 @@ public abstract class GeneralImportConfigPanel extends JPanel{
 	protected ClientConfigImporter clientConfigImporter;
 	
 	public GeneralImportConfigPanel(DefaultListModel importListModel) {
-		panelWidth = super.getWidth();
-		panelHeight = super.getHeight();
+		panelWidth = Constants.WINDOW_WIDTH - 50;
+		panelHeight = Constants.WINDOW_HEIGHT/3 - 50;
 		importerList = new JList(importListModel);
 		importerScrollPane = new JScrollPane(importerList);
 		basicInfoPanel = new JPanel();
@@ -118,6 +118,7 @@ public abstract class GeneralImportConfigPanel extends JPanel{
 		c.gridy = 4;
 		c.gridheight = 1;
 		basicInfoPanel.add(addImporterButton, c);
+		this.setPreferredSize(new Dimension(panelWidth, panelHeight));
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 	}

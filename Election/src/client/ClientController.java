@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -9,7 +10,9 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.sun.corba.se.impl.orbutil.closure.Constant;
@@ -38,6 +41,8 @@ public class ClientController implements Runnable {
 		generalConfigGUI = new GeneralConfigGUI(clientModel.getImportListModel());
 		selectConfigGUI = new SelectConfigGUI(clientModel.getConfigListModel(), Constants.SELECT_CONFIG_GUI_WIDTH,  Constants.SELECT_CONFIG_GUI_HEIGHT);
 		configFileList = new HashMap<String, ClientConfigFile>();
+		gui.addCard(selectConfigGUI, Constants.SELECT_CONFIG_PANEL_KEY);
+		gui.addCard(generalConfigGUI, Constants.GENERAL_CONFIG_PANEL_KEY);
 	}
 	
 	/**
@@ -85,16 +90,31 @@ public class ClientController implements Runnable {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				selectConfigGUI.setVisible(false);
-				
-				// adjust window size
 				gui.setSize(Constants.GENERAL_CONFIG_GUI_WIDTH, Constants.GENERAL_CONFIG_GUI_HEIGHT);
+				selectConfigGUI.setVisible(false);
+//				gui.setContentPane(generalConfigGUI);
+//				generalConfigGUI.setBorder(BorderFactory.createTitledBorder("abc"));
+//				gui.add(generalConfigGUI);
+//				gui.remove(selectConfigGUI);
+				
+//				gui.add(generalConfigGUI);
+				// adjust window size
+				
+//				gui.setResizable(true);
 				// add new content
-				gui.setContentPane(generalConfigGUI);
+				
+				JPanel cards = gui.getCards();
+				CardLayout cardLayout = (CardLayout) cards.getLayout();
+				cardLayout.show(cards, Constants.GENERAL_CONFIG_PANEL_KEY);
+				
 				gui.setLocationRelativeTo(null);
-				gui.pack();
+				gui.revalidate();
+				gui.repaint();
+				
+//				gui.pack();
 				// make screen visible
 				generalConfigGUI.setVisible(true);
+				gui.setVisible(true);
 				
 			}
 			
@@ -121,11 +141,16 @@ public class ClientController implements Runnable {
 				super.mouseClicked(e);
 				saveConfig();
 				clearCache();
-				generalConfigGUI.setVisible(false);
+//				generalConfigGUI.setVisible(false);
 				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
-				gui.setContentPane(selectConfigGUI);
+//				gui.setContentPane(selectConfigGUI);
+				JPanel cards = gui.getCards();
+				CardLayout cardLayout = (CardLayout) cards.getLayout();
+				cardLayout.show(cards, Constants.SELECT_CONFIG_PANEL_KEY);
 				gui.setLocationRelativeTo(null);
-				gui.pack();
+				gui.revalidate();
+				gui.repaint();
+//				gui.pack();
 				selectConfigGUI.setVisible(true);
 			}
 		});
@@ -173,8 +198,12 @@ public class ClientController implements Runnable {
 	
 	public void run() {
 		addListeners();
-		gui.setContentPane(selectConfigGUI);
-		gui.pack();
+//		gui.setContentPane(selectConfigGUI);
+		gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
+		JPanel cards = gui.getCards(); 
+		CardLayout cardLayout = (CardLayout) cards.getLayout();
+		cardLayout.show(cards, Constants.SELECT_CONFIG_PANEL_KEY);
+//		gui.pack();
 		gui.setVisible(true);
 	}
 	

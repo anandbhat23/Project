@@ -32,8 +32,8 @@ public abstract class GeneralExportConfigPanel extends JPanel{
 	
 	
 	public GeneralExportConfigPanel() {
-		panelWidth = super.getWidth();
-		panelHeight = super.getHeight();
+		panelWidth = Constants.WINDOW_WIDTH / 50;
+		panelHeight = Constants.WINDOW_HEIGHT / 3 - 50;
 		basicInfoPanel = new JPanel();
 		dataTypeList = new JComboBox(ClientConfigDataType.values());
 		dataLocationField = new JTextField();
