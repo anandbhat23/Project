@@ -32,6 +32,9 @@ public class Constants {
 	public final static Integer GAP_PADDING_HEIGHT = 20;
 	public final static Integer GAP_PADDING_WIDTH = 20;
 	public final static Integer CONFIGLIST_VISIBLE_ROW_COUNT = 11;
+	public final static Integer GENERAL_CONFIG_WINDOW_WIDTH = 1200;
+	public final static Integer GENERAL_CONFIG_WINDOW_HEIGHT = 800;
+			
 	
 	public final static String LABEL_APP = "Distributed ETL";
 	public final static String[] DATATYPE_OPTION = { "HTTP", "MYSQL", "HBASE" };
@@ -57,4 +60,8 @@ public class Constants {
 	public final static String COLUMN_LABEL = "Import Columns";
 	public final static String DATA_TYPE_LABEL = "Data Type";
 	public final static String DATA_LOCATION_LABEL = "Data Location";
+	public final static String IMPORTER_NAME_LABEL = "Importer Name";
+	public final static String IMPORTER_LIST_LABEL = "Importer List";
+	public final static String ADD_LABEL = "Add";
+	public final static String IMPORTER_EXPORTER_LIST_LABEL = "Importer List";
 }

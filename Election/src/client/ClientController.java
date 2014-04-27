@@ -48,6 +48,7 @@ public class ClientController implements Runnable {
 				// add new content
 				gui.setContentPane(generalConfigGUI);
 				gui.setLocationRelativeTo(null);
+				gui.pack();
 				// make screen visible
 				generalConfigGUI.setVisible(true);
 				
@@ -67,6 +68,8 @@ public class ClientController implements Runnable {
 				generalConfigGUI.setVisible(false);
 				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
 				gui.setContentPane(selectConfigGUI);
+				gui.setLocationRelativeTo(null);
+				gui.pack();
 				selectConfigGUI.setVisible(true);
 			}
 		});
