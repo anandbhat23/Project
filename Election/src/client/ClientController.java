@@ -90,8 +90,8 @@ public class ClientController implements Runnable {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				gui.setSize(Constants.GENERAL_CONFIG_GUI_WIDTH, Constants.GENERAL_CONFIG_GUI_HEIGHT);
-				selectConfigGUI.setVisible(false);
+				
+//				selectConfigGUI.setVisible(false);
 //				gui.setContentPane(generalConfigGUI);
 //				generalConfigGUI.setBorder(BorderFactory.createTitledBorder("abc"));
 //				gui.add(generalConfigGUI);
@@ -106,15 +106,16 @@ public class ClientController implements Runnable {
 				JPanel cards = gui.getCards();
 				CardLayout cardLayout = (CardLayout) cards.getLayout();
 				cardLayout.show(cards, Constants.GENERAL_CONFIG_PANEL_KEY);
-				
+				gui.setSize(Constants.GENERAL_CONFIG_GUI_WIDTH, Constants.GENERAL_CONFIG_GUI_HEIGHT);
+				gui.setResizable(true);
 				gui.setLocationRelativeTo(null);
 				gui.revalidate();
 				gui.repaint();
 				
 //				gui.pack();
 				// make screen visible
-				generalConfigGUI.setVisible(true);
-				gui.setVisible(true);
+//				generalConfigGUI.setVisible(true);
+//				gui.setVisible(true);
 				
 			}
 			
@@ -142,16 +143,17 @@ public class ClientController implements Runnable {
 				saveConfig();
 				clearCache();
 //				generalConfigGUI.setVisible(false);
-				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
+				
 //				gui.setContentPane(selectConfigGUI);
 				JPanel cards = gui.getCards();
 				CardLayout cardLayout = (CardLayout) cards.getLayout();
 				cardLayout.show(cards, Constants.SELECT_CONFIG_PANEL_KEY);
+				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
 				gui.setLocationRelativeTo(null);
 				gui.revalidate();
 				gui.repaint();
 //				gui.pack();
-				selectConfigGUI.setVisible(true);
+//				selectConfigGUI.setVisible(true);
 			}
 		});
 		
