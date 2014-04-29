@@ -1,30 +1,30 @@
 package client;
 
 import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-import com.sun.media.sound.ModelAbstractChannelMixer;
-
-import config.ClientConfigDataType;
-import config.ClientConfigFile;
-import config.ClientConfigFileFactory;
-import config.ClientConfigImporter;
 import view.GeneralConfigGUI;
 import view.SelectConfigGUI;
 import view.WindowGUI;
+import config.ClientConfigDataType;
+import config.ClientConfigExporter;
+import config.ClientConfigFile;
+import config.ClientConfigImporter;
+import config.ClientMySqlExporter;
+import config.ClientMySqlImporter;
 
 public class ClientController implements Runnable {
 	private WindowGUI gui;
@@ -33,6 +33,7 @@ public class ClientController implements Runnable {
 	private ClientModel clientModel;
 	private ClientConfigFile currentConfigFile;
 	private Map<String, ClientConfigFile> configFileList;
+	private ArrayList<String> importerNames = new ArrayList<String>();
 	
 	public ClientController() {
 		gui = new WindowGUI(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
@@ -52,7 +53,105 @@ public class ClientController implements Runnable {
 		//TODO: implement config save
 		setCurrentConfigFile();
 		addConfigFile(currentConfigFile);
+		//Store config on server
+				try {
+					storeConfigFile(currentConfigFile);
+				} catch (IOException e) {
+					System.out.println("Error while creating a new config file");
+				}
 		resetCurrentConfigFile();
+	}
+	
+	public void storeConfigFile(ClientConfigFile currentConfigFile) throws IOException{
+
+		int length = 0, i=0;
+		
+		File file = new File("src/" + currentConfigFile.getConfigFileName());
+		file.createNewFile();
+
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		//Write importers
+		length = importerNames.size();
+		
+		bw.write("importer :\n");
+		
+		while(i<length){
+		
+		ClientConfigImporter currentImporter = currentConfigFile.getClientImporter(importerNames.get(i));
+		
+		if (currentImporter.getImporterType().getType().equalsIgnoreCase("HTTP")) {
+
+			bw.write("- type : HTTP\n");
+			bw.write("  location : " + currentImporter.getLocation() + "\n");
+			bw.write("\n");
+		}
+		else {
+			ClientMySqlImporter mysqlImporter = (ClientMySqlImporter) currentImporter;
+			
+			bw.write("- type : MySQL\n" );
+			bw.write("  location : " + mysqlImporter.getLocation() + "\n");
+			bw.write("  username : " + mysqlImporter.getUserName() + "\n");
+			bw.write("  password : " + mysqlImporter.getPassword() + "\n");
+			bw.write("  table : " + mysqlImporter.getTable() + "\n");
+			bw.write("  columns : \n");
+			
+			
+			int len = mysqlImporter.getColumns().length, j=0;
+			String columns[] = mysqlImporter.getColumns();
+			
+			while(j<len){
+				bw.write("    - " + columns[j] + "\n");
+				j++;
+			}
+			
+			bw.write(" rowStart : " + mysqlImporter.getRowStart() + "\n");
+			bw.write(" rowEnd : " + mysqlImporter.getRowEnd() + "\n");
+		}
+		i++;
+		}
+		
+		bw.write("\n\n");
+		
+		//Write transformer
+		bw.write("transformer : \n");
+		bw.write(" - transformop : " + currentConfigFile.getTransformerScript() + "\n\n");
+		
+		//Write exporter
+		bw.write("exporter : \n");
+		
+		ClientConfigExporter currentExporter = currentConfigFile.getClientExporter();
+		
+		if (currentExporter.getExporterType().getType().equalsIgnoreCase("HTTP")) {
+
+			bw.write("- type : HTTP\n");
+			bw.write("  location : " + currentExporter.getLocation() + "\n");
+			bw.write("\n");
+		}
+		else {
+			
+			ClientMySqlExporter mysqlExporter = (ClientMySqlExporter) currentExporter;
+			bw.write("- type : MySQL\n");
+			bw.write("  location : " + mysqlExporter.getLocation() + "\n");
+			bw.write("  username : " + mysqlExporter.getUserName() + "\n");
+			bw.write("  password : " + mysqlExporter.getPassword() + "\n");
+			bw.write("  table : " + mysqlExporter.getTable() + "\n");
+			bw.write("  columns : \n");
+			
+			System.out.println("length = " +  mysqlExporter.getColumns().length);
+			int len = mysqlExporter.getColumns().length, j=0;
+			String columns[] = mysqlExporter.getColumns();
+			
+			while(j<len){
+				bw.write("    - " + columns[j] + "\n");
+				j++;
+			}
+		}
+		
+		//close file
+		bw.close();
+		
 	}
 	
 	public void clearCache() {
@@ -166,6 +265,7 @@ public class ClientController implements Runnable {
 				super.mouseClicked(e);
 				
 				ClientConfigImporter currentImporter = generalConfigGUI.getClientConfigImporter();
+				importerNames.add(currentImporter.getImporterName());
 				currentConfigFile.addClientImporter(currentImporter.getImporterName(), currentImporter);
 				clientModel.getImportListModel().addElement(currentImporter.getImporterName());
 				generalConfigGUI.resetImporterConfigPanel();

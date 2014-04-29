@@ -32,7 +32,7 @@ public class ClientMySqlImporter extends ClientConfigImporter{
 	}
 	
 	public void setColumns(String columnString) {
-		ClientParser.columnStringParser(columns, columnString);
+		columns = ClientParser.columnStringParser(columns, columnString);
 	}
 	
 	public void setRowStart(Integer rowStart) {
