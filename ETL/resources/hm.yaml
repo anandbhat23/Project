@@ -15,14 +15,15 @@ importer :
    rowStart : 1
    rowEnd : 5
 
+transformer :
+ - transformop : 0;sum(1,2,3)
+ 
 exporter :
  - type : MySQL
    location :  localhost:3306
    username : root
    password : MySql@Passw0rd
-   table : etl.studentgrades
+   table : etl.studentpercent
    columns : 
     - id
-    - subject1
-    - subject2
-    - subject4
+    - percentage

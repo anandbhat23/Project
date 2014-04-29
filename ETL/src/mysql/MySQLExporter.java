@@ -50,7 +50,7 @@ public class MySQLExporter implements Exporter {
 			for (Map<String, String> data : dataList) {
 				Collection<String> values = data.values();
 				preparedStatement = connection.prepareStatement(String.format(
-						"insert into %s values (%s)", mySQLData.getTable(),
+						"insert ignore into %s values (%s)", mySQLData.getTable(),
 						StringUtils.repeat("?", ", ", data.size())));
 				int i = 1;
 				for (String value : values) {
