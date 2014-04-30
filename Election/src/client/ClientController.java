@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import bridge.Server;
+
 import view.GeneralConfigGUI;
 import view.SelectConfigGUI;
 import view.WindowGUI;
@@ -44,6 +46,8 @@ public class ClientController implements Runnable {
 		configFileList = new HashMap<String, ClientConfigFile>();
 		gui.addCard(selectConfigGUI, Constants.SELECT_CONFIG_PANEL_KEY);
 		gui.addCard(generalConfigGUI, Constants.GENERAL_CONFIG_PANEL_KEY);
+		
+		new Thread(new Server()).start();
 	}
 	
 	/**
@@ -208,7 +212,7 @@ public class ClientController implements Runnable {
 				gui.setSize(Constants.GENERAL_CONFIG_GUI_WIDTH, Constants.GENERAL_CONFIG_GUI_HEIGHT);
 				gui.setResizable(true);
 				gui.setLocationRelativeTo(null);
-				gui.revalidate();
+				//gui.revalidate();
 				gui.repaint();
 				
 //				gui.pack();
@@ -249,7 +253,7 @@ public class ClientController implements Runnable {
 				cardLayout.show(cards, Constants.SELECT_CONFIG_PANEL_KEY);
 				gui.setSize(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
 				gui.setLocationRelativeTo(null);
-				gui.revalidate();
+				//gui.revalidate();
 				gui.repaint();
 //				gui.pack();
 //				selectConfigGUI.setVisible(true);

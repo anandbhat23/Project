@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
@@ -67,6 +69,14 @@ public class SelectConfigButtonPanel extends JPanel{
 	
 	private void setStartButton() {
 		startButton.setSize(panelWidth, Constants.START_BUTTON_HEIGHT);
+		startButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Screen4 frame4 = new Screen4();
+				frame4.setVisible(true);	
+			}
+		});
 	}
 	
 	private void setConfigFileChooser() {
