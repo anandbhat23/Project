@@ -12,11 +12,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import protobuf.ProtoMessageConfig.ProtoMessage;
+import utils.Fileserver;
 import common.Parser;
 import common.ParserFactory;
 import core.ETLJob;
 import core.Exporter;
 import core.Importer;
+import core.Transformer;
 
 public class SlaveTaskTracker {
 
@@ -43,7 +45,8 @@ public class SlaveTaskTracker {
     try {
       // TODO : should get from system config file
       this.port = port;
-      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       if(ms[1].equals("localhost"))
         ms[1] = InetAddress.getLocalHost().getHostAddress();
@@ -311,12 +314,13 @@ public class SlaveTaskTracker {
 				Importer importer = parser
 						.createImporterFromProtoMessage(protoMessage
 								.getImporter().getAllFields());
+				String transformation = protoMessage.getTransformer().getTransformOp();
 				parser = ParserFactory.getParser(protoMessage
 						.getExporter().getType());
 				Exporter exporter = parser
 						.createExporterFromProtoMessage(protoMessage
 								.getExporter().getAllFields());
-				job = new ETLJob(importer, exporter);
+				job = new ETLJob(importer, exporter, transformation);
 			} catch (Exception e) {
 				// FT This is a job failure
 				String err_msg = e.getMessage();
@@ -331,7 +335,8 @@ public class SlaveTaskTracker {
 				//TODO ADD the transformations
 				List<Map<String, String>> data = job.getImporter().importData(
 						protoMessage);
-				job.getExporter().export(data);
+				List<Map<String, String>> transformedData = Transformer.applyTransformations(data, job.getTransformation());
+				job.getExporter().export(transformedData);
 
 			} catch (Exception e) {
 				// FT This is a task failure

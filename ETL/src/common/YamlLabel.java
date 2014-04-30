@@ -13,7 +13,9 @@ public enum YamlLabel {
 	COLUMNS("columns"),
 	ROW_START("rowStart"),
   	ROW_END("rowEnd"),
+  	TRANSFORM_OP("transformop"),
 	DATA("data");
+	
 	
 	private String lableName;
 

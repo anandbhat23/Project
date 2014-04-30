@@ -24,21 +24,25 @@ public class TransformerConfigPanel extends JPanel{
 	
 	public void setTransformerConfigPanel() {
 //		transformerScriptArea.setPreferredSize(new Dimension(super.getWidth(), super.getHeight() / 3));
-		transformerScriptArea.setRows(10);
+		transformerScriptArea.setRows(5);
 		transformerScriptArea.setColumns(90);
 		
 		transformerScriptPane.setBorder(BorderFactory.createTitledBorder(Constants.TRANSFORMER_SCRIPT_LABEL));
 	}
 	
 	public void createTransformerConfigPanel(){
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 10;
-		c.gridwidth = 10;
-		this.add(transformerScriptPane, c);
+//		this.setLayout(new GridBagLayout());
+//		GridBagConstraints c = new GridBagConstraints();
+//		c.fill = GridBagConstraints.BOTH;
+//		c.weightx = 0.5;
+//		c.weighty = 0.5;
+//		c.gridx = 0;
+//		c.gridy = 0;
+//		c.gridheight = 10;
+//		c.gridwidth = 10;
+//		this.add(transformerScriptPane, c);
+		this.setLayout(new BorderLayout());
+		this.add(transformerScriptPane, BorderLayout.CENTER);
 	}
 	
 	public String getTransformerScript() {

@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import protobuf.ProtoMessageConfig.ProtoMessage;
+import utils.Fileserver;
 import core.ETLJob;
 import common.YamlParser;
 
@@ -63,7 +64,8 @@ public class MasterJobTracker {
       // TODO : should get from system config file
       logger = new PrintWriter("resources/log", "UTF-8");
 
-      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       localhost = InetAddress.getLocalHost().getHostAddress();
       if(ms[1].equals("localhost"))
