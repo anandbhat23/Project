@@ -3,6 +3,8 @@ package bridge;
 import java.io.*; 
 import java.net.*; 
 
+import view.Screen4;
+
 public class Server implements Runnable{ 
 	
 	@Override
@@ -51,7 +53,15 @@ public class Server implements Runnable{
 		while(true) { 
 			try {
 				if((receiveMessage = receiveRead.readLine()) != null) {
-					System.out.println(receiveMessage); 
+					System.out.println(receiveMessage);
+					
+					if(receiveMessage.contains("hey")) {
+						Screen4.addSlave(1);
+					}
+					if(receiveMessage.contains("hi")) {
+						Screen4.addSlave(2);
+						Screen4.removeSlave(1);
+					}
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
