@@ -48,7 +48,7 @@ public class GeneralConfigGUI extends JPanel{
 	private final String EXPORTER_LABEL = "Exporter";
 	private final String SUBMIT_BUTTON_TEXT = "Submit";
 	
-	
+//	
 //	public GeneralConfigGUI() {
 //		this.windowWidth = Constants.GENERAL_CONFIG_WINDOW_WIDTH;
 //		this.windowHeight = Constants.GENERAL_CONFIG_WINDOW_HEIGHT;
@@ -85,6 +85,7 @@ public class GeneralConfigGUI extends JPanel{
 		
 		setGeneralConfigGUI(importListModel);
 		createGeneralConfigGUI();
+		this.setBorder(BorderFactory.createTitledBorder("tmp"));
 	}
 		
 //	private void setGeneralConfigGUI() {
@@ -117,59 +118,74 @@ public class GeneralConfigGUI extends JPanel{
 		configFileName.setColumns(30);
 		configBasicPanel.setBorder(BorderFactory.createTitledBorder(Constants.CONFIG_FILE_NAME_LABEL));
 		configBasicPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		configBasicPanel.setPreferredSize(new Dimension(windowWidth, 60));
+//		configBasicPanel.setPreferredSize(new Dimension(windowWidth, 60));
 		configBasicPanel.add(configFileName);
 		
 		importerPanel.setBorder(BorderFactory.createTitledBorder(IMPORTER_LABEL));
 		importerPanel.setLayout(new BorderLayout());
-		importerPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3 - 40 ));
+//		importerPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3 - 40 ));
 		importerPanel.add(importConfigPanel, BorderLayout.WEST);
 //		importerPanel.add(importerHttpConfigPanel, BorderLayout.WEST);
 
 		transformerPanel.setBorder(BorderFactory.createTitledBorder(TRANSFORMER_LABEL));
-		transformerPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3 -40 ));
+//		transformerPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3 -40 ));
 		transformerPanel.add(transformerConfigPanel, BorderLayout.WEST);
 		
 		exporterPanel.setBorder(BorderFactory.createTitledBorder(EXPORTER_LABEL));
-		exporterPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3-40));
+//		exporterPanel.setPreferredSize(new Dimension(windowWidth, windowHeight / 3-40));
 		exporterPanel.add(exportConfigPanel, BorderLayout.WEST);
 		
 		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.setPreferredSize(new Dimension(windowWidth, 60));
+//		buttonPanel.setPreferredSize(new Dimension(windowWidth, 60));
 		buttonPanel.add(submitButton);
 	}
 		
 	public void createGeneralConfigGUI() {
 		GridBagConstraints c = new GridBagConstraints();
 		
-		c.fill = GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.weighty = 0.01;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 1;
+		c.anchor = GridBagConstraints.PAGE_START;
+//		c.gridwidth = 10;
 		this.add(configBasicPanel, c);
 		
-		c.fill = GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.weighty = 0.01;
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridheight = 1;
+		c.gridheight =2;
+//		c.gridwidth = 10;
 		this.add(importerPanel, c);
 		
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridheight = 1;
-		this.add(transformerPanel, c);
-		
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridheight = 1;
-		this.add(exporterPanel, c);
-		
-		c.fill = GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.weighty = 0.1;
 		c.gridx = 0;
 		c.gridy = 4;
+		c.gridheight = 3;
+		c.gridwidth = 10;
+		this.add(transformerPanel, c);
+		
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 7;
+		c.gridheight = 3;
+		c.gridwidth = 10;
+		this.add(exporterPanel, c);
+		
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 10;
 		c.gridheight = 1;
+		c.gridwidth = 10;
+		c.anchor = GridBagConstraints.PAGE_END;
 		this.add(buttonPanel, c);
 	}
 	
@@ -274,10 +290,12 @@ public class GeneralConfigGUI extends JPanel{
 //			
 //		}
 //	}
-//	public static void main(String[] args) {
-//		WindowGUI gui = new WindowGUI();
-//		gui.add(new GeneralConfigGUI());
+	public static void main(String[] args) {
+		WindowGUI gui = new WindowGUI();
+		DefaultListModel tmpModel = new DefaultListModel();
+		gui.setLayout(new BorderLayout());
+		gui.add(new GeneralConfigGUI(tmpModel), BorderLayout.CENTER);
 //		gui.pack();
-//		gui.setVisible(true);
-//	}
+		gui.setVisible(true);
+	}
 }

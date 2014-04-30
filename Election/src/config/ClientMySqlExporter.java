@@ -30,7 +30,7 @@ public class ClientMySqlExporter extends ClientConfigExporter{
 	}
 	
 	public void setColumns(String columnString) {
-		ClientParser.columnStringParser(columns, columnString);
+		columns = ClientParser.columnStringParser(columns, columnString);
 	}
 	
 	public String getUserName() {

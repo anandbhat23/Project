@@ -7,7 +7,7 @@ public class Constants {
 	public final static Integer CENTER_HEIGHT = 1100;
 	public final static Integer BOTTOM_HEIGHT = WINDOW_HEIGHT - CENTER_HEIGHT;
 	public final static Integer SELECTP_WIDTH = 300;
-	public final static Integer SELECTP_HEIGHT = WINDOW_HEIGHT;
+	public final static Integer SELECTP_HEIGHT = 260;
 	public final static Integer DETAILP_WIDTH = WINDOW_WIDTH - SELECTP_WIDTH;
 	public final static Integer DETAILP_HEIGHT = WINDOW_HEIGHT;
 	public final static Integer IMEXP_WIDTH = DETAILP_WIDTH;
@@ -31,7 +31,7 @@ public class Constants {
 	public final static Integer TOP_PADDING_HEIGHT = 50;
 	public final static Integer GAP_PADDING_HEIGHT = 20;
 	public final static Integer GAP_PADDING_WIDTH = 20;
-	public final static Integer CONFIGLIST_VISIBLE_ROW_COUNT = 11;
+	public final static Integer CONFIGLIST_VISIBLE_ROW_COUNT = 3;
 	public final static Integer GENERAL_CONFIG_WINDOW_WIDTH = 1200;
 	public final static Integer GENERAL_CONFIG_WINDOW_HEIGHT = 800;
 			
