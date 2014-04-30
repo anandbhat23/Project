@@ -5,11 +5,19 @@ public class ETLMessage implements Serializable {
   private MessageType type;
   private Object obj;
   private Object arg;
+  private Object arg2;
   
   public ETLMessage(MessageType type, Object obj, Object arg) {
     this.type = type;
     this.obj = obj;
     this.arg = arg;
+  }
+  
+  public ETLMessage(MessageType type, Object obj, Object arg, Object arg2) {
+    this.type = type;
+    this.obj = obj;
+    this.arg = arg;
+    this.arg2 = arg2;
   }
 
   public MessageType getType() {
@@ -21,6 +29,10 @@ public class ETLMessage implements Serializable {
   }
 
   public Object getArg() {
+    return arg;
+  }
+  
+  public Object getArg2() {
     return arg;
   }
 

@@ -26,6 +26,7 @@ public class SlaveController {
         System.out.println("Job started!");
       }
       else {
+
         int port = Integer.parseInt(jobArgs[0]);
         taskTracker = new SlaveTaskTracker(port);
         taskTracker.start();

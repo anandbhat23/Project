@@ -31,6 +31,7 @@ public class SlaveTaskTracker {
 	List<String> slaveList;
 	int slaveid;
 	boolean bootstrapped = false;
+	String clientAddr;
 	
 	boolean master_died= false;
 	boolean inElection = false;
@@ -102,8 +103,9 @@ public class SlaveTaskTracker {
           inElection = false;
           electionStartedByMe=false;
           master_died = false;
+          
           MasterJobTracker jobTracker = new MasterJobTracker();
-          jobTracker.restart(slaveList);
+          jobTracker.restart(slaveList, clientAddr);
           
           try {
           String ip = InetAddress.getLocalHost().getHostAddress();
@@ -113,6 +115,14 @@ public class SlaveTaskTracker {
             msgElectionTime = System.currentTimeMillis();
             electionStartedByMe=true;
             multicast(m);
+            
+            
+            System.out.println("client is "+clientAddr+" new master sent");
+            
+            ETLMessage m2 = new ETLMessage(MessageType.MsgNewMaster,
+                ip+":"+MASTER_PORT, null);  
+            
+            sendMsgToSlave(m2, clientAddr);
           }catch(Exception e) {
             e.printStackTrace();
           }
@@ -174,9 +184,21 @@ public class SlaveTaskTracker {
 
 				if (type == MessageType.MsgTaskStart) {
 					Task task = (ETLTask) msg.getObj();
+					String client = (String) msg.getArg();
+					if(clientAddr == null) {
+					  clientAddr = client;
+					}
 					System.out.println("get Msg TaskStart");
 					TaskStart(task);
 				}
+				
+        if (type == MessageType.MsgNewSlaveRemove) {
+          ArrayList<String> addrs = ((ArrayList<String>) msg.getObj());
+          addrs.remove(slaveAddr);
+          slaveList = addrs;
+          System.out.println("get Msg SlaveList Update: "+addrs);
+          
+        }
 				
         if (type == MessageType.MsgElection) {
           System.out.println("get msg elec");
@@ -211,6 +233,15 @@ public class SlaveTaskTracker {
           electionStartedByMe=false;
         }
         
+        if (type == MessageType.MsgMasterAddrRequest) {
+          System.out.println("get master addr req");
+          String dst = (String) msg.getObj();
+          if(master_died== false) {
+            ETLMessage m = new ETLMessage(MessageType.MsgMasterAddrResponse, masterAddr,null);
+            sendMsgToSlave(m,dst);
+          }
+        }
+        
         if (type == MessageType.MsgVictory) {
           System.out.println("get msg victory");
           String m_addr = (String) msg.getObj();
@@ -231,6 +262,8 @@ public class SlaveTaskTracker {
             slaveid = addrs.size()-1;
             addrs.remove(addrs.size()-1);
             masterAddr =  (String) msg.getArg();
+            if(msg.getArg2()!= null)
+              clientAddr = (String)msg.getArg2();
             System.out.println("update slave list "+ addrs);
           } else {
             String newslave = addrs.get(addrs.size()-1);

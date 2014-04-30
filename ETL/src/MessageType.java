@@ -10,8 +10,15 @@ public enum MessageType {
   
   MsgElection, MsgAnswer, MsgVictory,
   
-  MsgNewJob,
+  MsgNewJob, MsgNewJobClient,
   
-  MsgNewSlaveRequest, MsgNewSlaveUpdate
+  MsgNewSlaveRequest, MsgNewSlaveUpdate, MsgNewSlaveRemove,
+  
+  MsgTaskStatus, MsgJobStatus,MsgSlaveStatus,
+  
+  MsgNewMaster,
+  
+  MsgMasterAddrRequest, MsgMasterAddrResponse,
+  
 
 }

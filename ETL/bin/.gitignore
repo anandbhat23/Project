@@ -31,3 +31,9 @@
 /SlaveTaskTracker.class
 /Task.class
 /SlaveController.class
+/MasterJobTracker$MsgDispatcherClient.class
+/SampleClient$ListenerThread.class
+/SampleClient$MsgDispatcherClient.class
+/SampleClient$MsgHandler.class
+/SampleClient.class
+/CopyOfSlaveController.class
