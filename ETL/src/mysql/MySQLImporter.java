@@ -63,7 +63,7 @@ public class MySQLImporter implements Importer{
 	}
 
 	@Override
-	public List<Map<String, String>> importData(ProtoMessage protoMessage) {
+	public List<Map<String, String>> importData(ProtoMessage protoMessage) throws SQLException {
 		List<Map<String, String>> dataList = Lists.newArrayList();
 		try {
 			testJDBCDriver();
@@ -77,9 +77,8 @@ public class MySQLImporter implements Importer{
 				dataList.add(dataMap);
 			}
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally{
+			connection.close();
 		}
 		return dataList;
 	}

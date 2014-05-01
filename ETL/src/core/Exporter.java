@@ -8,5 +8,5 @@ import protobuf.ProtoMessageConfig.ProtoMessage;
 public interface Exporter {
 	
 	public void buildMessage(ProtoMessage.Builder protoMessage);
-	public void export(List<Map<String, String>> data);
+	public void export(List<Map<String, String>> data) throws Exception;
 }

@@ -42,7 +42,7 @@ public class HTTPParser implements Parser{
 			Map<FieldDescriptor, Object> params) {
 		Map<String, Object> exporterParams = Maps.newHashMap();
 		for(Entry<FieldDescriptor, Object> entry: params.entrySet()){
-			exporterParams.put(entry.getKey().getFullName(), entry.getValue());
+			exporterParams.put(entry.getKey().getName(), entry.getValue());
 		}
 		return createExporter(exporterParams);
 	}

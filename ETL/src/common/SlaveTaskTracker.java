@@ -1,8 +1,10 @@
+package common;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -45,8 +47,8 @@ public class SlaveTaskTracker {
     try {
       // TODO : should get from system config file
       this.port = port;
-      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
-      //BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
+      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      BufferedReader br = Fileserver.getFile("http://128.237.210.106:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       if(ms[1].equals("localhost"))
         ms[1] = InetAddress.getLocalHost().getHostAddress();
@@ -56,13 +58,14 @@ public class SlaveTaskTracker {
       slaveList = new ArrayList<String>();
       while (line != null) {
         ms = line.split(":");
-        if(ms[1].equals("localhost")) {
+        if(ms[1].equals("localhost") || ms[1].equals(InetAddress.getLocalHost().getHostAddress())) {
           
           ms[1] = InetAddress.getLocalHost().getHostAddress();
           
           if(ms[2].equals(String.valueOf(port))) {
             this.slaveid = sid;
             slaveAddr= ms[1]+":"+ms[2];
+            System.out.println("my own addr is"+ slaveAddr);
             bootstrapped = true;
           }
           
@@ -105,20 +108,22 @@ public class SlaveTaskTracker {
 		      System.out.println("I WIN ELECTION!");
           inElection = false;
           electionStartedByMe=false;
-          master_died = false;
           
           MasterJobTracker jobTracker = new MasterJobTracker();
           jobTracker.restart(slaveList, clientAddr);
+          System.out.println("new master at port" + MASTER_PORT);
           
           try {
           String ip = InetAddress.getLocalHost().getHostAddress();
+            
+          masterAddr = ip+":"+MASTER_PORT;
+          master_died = false;
           ETLMessage m = new ETLMessage(MessageType.MsgVictory,
               ip+":"+MASTER_PORT, null);
-            inElection = true;
+            inElection = false;
             msgElectionTime = System.currentTimeMillis();
-            electionStartedByMe=true;
+            electionStartedByMe=false;
             multicast(m);
-            
             
             System.out.println("client is "+clientAddr+" new master sent");
             
@@ -246,8 +251,9 @@ public class SlaveTaskTracker {
         }
         
         if (type == MessageType.MsgVictory) {
-          System.out.println("get msg victory");
           String m_addr = (String) msg.getObj();
+          System.out.println("get msg victory new master = "+m_addr);
+
           masterAddr = m_addr;
           inElection = false;
           electionStartedByMe=false;
@@ -263,7 +269,6 @@ public class SlaveTaskTracker {
             bootstrapped = true;
             slaveList = addrs;
             slaveid = addrs.size()-1;
-            addrs.remove(addrs.size()-1);
             masterAddr =  (String) msg.getArg();
             if(msg.getArg2()!= null)
               clientAddr = (String)msg.getArg2();
@@ -273,6 +278,8 @@ public class SlaveTaskTracker {
             System.out.println("update slave lis. add "+ newslave);
             slaveList.add(newslave);
           }
+          
+          System.out.println("NOW SLAVE LIST IS"+ slaveList+", master is"+ masterAddr+" my own addr is" + slaveAddr+"  slaveid is"+slaveid);
           
         }
         
@@ -382,6 +389,8 @@ public class SlaveTaskTracker {
 	 
 	 public void addNode(int port) throws Exception{
 	   
+	    
+	   
 	    ListenerThread listener = new ListenerThread();
 	    listener.start();
 	    Timer timer = new Timer();
@@ -389,7 +398,8 @@ public class SlaveTaskTracker {
 	        2 * 1000); // subsequent rate
 	   
 	   String localhost = InetAddress.getLocalHost().getHostAddress();
-     ETLMessage msg = new ETLMessage(MessageType.MsgNewSlaveRequest, localhost+":"+port,
+	   slaveAddr = localhost+":"+port;
+	   ETLMessage msg = new ETLMessage(MessageType.MsgNewSlaveRequest, localhost+":"+port,
          null);
      sendMsgToMaster(msg);
      
@@ -405,7 +415,7 @@ public class SlaveTaskTracker {
 	private void multicast(ETLMessage m) {
 	  for(String s: slaveList) {
 	    if(!s.equals(slaveAddr)) {
-	      System.out.println("sent to"+s);
+	      System.out.println("sent to"+s+" from" + slaveAddr);
 	      sendMsgToSlave(m,s);
 	    }
 	  }
@@ -423,9 +433,13 @@ public class SlaveTaskTracker {
 		public void run() {
 			Socket s;
 			try {
+			  
 				String ip = dstAddr.split(":")[0];
 				String port = dstAddr.split(":")[1];
-				s = new Socket(ip, Integer.parseInt(port));
+
+        s = new Socket();
+        s.connect(new InetSocketAddress(ip, Integer.parseInt(port)), 300);
+        
 				ObjectOutputStream os = new ObjectOutputStream(
 						s.getOutputStream());
 				os.writeObject(m);
@@ -436,6 +450,10 @@ public class SlaveTaskTracker {
 					throw new RuntimeException("MSG ERROR");
 				s.close();
 			} catch (Exception e) {
+			  
+			  if(master_died)
+			    return;
+			  
 				master_died = true;
 				System.out.println("master died. start process");
 				if(!inElection){
@@ -466,8 +484,10 @@ public class SlaveTaskTracker {
 	    public void run() {
 	      Socket s;
 	      try {
+	        
 	        String ip = dstAddr.split(":")[0];
 	        String port = dstAddr.split(":")[1];
+	        
 	        s = new Socket(ip, Integer.parseInt(port));
 	        ObjectOutputStream os = new ObjectOutputStream(
 	            s.getOutputStream());

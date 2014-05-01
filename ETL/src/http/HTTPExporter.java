@@ -27,7 +27,7 @@ public class HTTPExporter implements Exporter {
 	public void export(List<Map<String, String>> dataList) {
 		BufferedWriter bw = null;
 		try {
-			File file = new File("resources/final");
+			File file = new File(httpData.getLocation());
 			if (!file.exists()) {
 				file.createNewFile();
 			}
@@ -36,6 +36,7 @@ public class HTTPExporter implements Exporter {
 			for (Map<String, String> data : dataList) {
 				for (Entry<String, String> entry : data.entrySet()) {
 					bw.write(entry.getValue());
+					bw.write("\t");
 				}
 				bw.write("\n");
 			}
@@ -51,7 +52,7 @@ public class HTTPExporter implements Exporter {
 		
 		protobuf.ProtoMessageConfig.Exporter.Builder exporter = ProtoMessageConfig.Exporter.newBuilder();
 		exporter.setType(HTTP.name());
-		exporter.setDestination(httpData.getLocation());
+		exporter.setLocation(httpData.getLocation());
 		protoMessage.setExporter(exporter);
 	}
 }
