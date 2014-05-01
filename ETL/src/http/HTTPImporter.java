@@ -4,15 +4,9 @@ import static common.DataTypes.HTTP;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-<<<<<<< HEAD
-import java.io.InputStreamReader;
-=======
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
->>>>>>> e8a92d69c40ede578ead20d916ba6f2c631c7b9b
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +29,10 @@ public class HTTPImporter implements Importer{
 		super();
 		this.httpData = httpData;
 		try {
-<<<<<<< HEAD
-			br = new BufferedReader(new InputStreamReader( new URL ("http://"+httpData.getLocation()).openStream()));
-		} catch (Exception e) {
-=======
+
 			InputStream in = new URL("http://" + httpData.getLocation()).openStream();
 			br = new BufferedReader(new InputStreamReader(in));
 		} catch (FileNotFoundException e) {
->>>>>>> e8a92d69c40ede578ead20d916ba6f2c631c7b9b
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
