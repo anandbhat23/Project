@@ -8,6 +8,10 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import client.ClientController;
+
+import bridge.Server;
+
 public class SelectConfigButtonPanel extends JPanel{
 	private JButton newButton;
 	private JButton removeButton;
@@ -73,6 +77,8 @@ public class SelectConfigButtonPanel extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Server.sendJob(ClientController.selectedConfigFileName);
+				System.out.println("Config file: " + ClientController.selectedConfigFileName);
 				Screen4 frame4 = new Screen4();
 				frame4.setVisible(true);	
 			}

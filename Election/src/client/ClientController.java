@@ -37,7 +37,7 @@ public class ClientController implements Runnable {
 	private ClientConfigFile currentConfigFile;
 	private Map<String, ClientConfigFile> configFileList;
 	private ArrayList<String> importerNames = new ArrayList<String>();
-	private String selectedConfigFileName;
+	public static String selectedConfigFileName;
 	private Server server = null;
 	
 	public ClientController() {
@@ -72,7 +72,7 @@ public class ClientController implements Runnable {
 
 		int length = 0, i=0;
 		
-		File file = new File("src/" + currentConfigFile.getConfigFileName());
+		File file = new File("/home/madhuri/workspace_DS/Project/ETL/resources/" + currentConfigFile.getConfigFileName());
 		file.createNewFile();
 
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
@@ -202,8 +202,7 @@ public class ClientController implements Runnable {
 
 						// TODO Auto-generated method stub
 
-						// Madhuri, selectedConfigFileName is a private String
-						// member hold the user selected config file name.
+						
 						server.sendJob(selectedConfigFileName);
 						// it will be updated whenever user click onto it.
 						System.out.println(selectedConfigFileName);

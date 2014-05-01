@@ -225,7 +225,7 @@ public class MasterJobTracker {
       try {
         String ip = slaveAddr.get(slaveId).split(":")[0];
         String port = slaveAddr.get(slaveId).split(":")[1];
-        System.out.println(ip+" "+port);
+        System.out.println(ip+":"+port);
         s = new Socket(ip, Integer.parseInt(port));
         ObjectOutputStream os = new ObjectOutputStream(s.getOutputStream());
         os.writeObject(m);

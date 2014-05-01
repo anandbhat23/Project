@@ -3,6 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.sql.SQLException;
+
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 
@@ -12,6 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+
+import client.ClientController;
+
+import resultViewer.ResultViewer;
 
 
 /**
@@ -31,9 +39,9 @@ public class Screen5 extends JFrame {
 	
 	
 	private JPanel contentPane;
-	private JTextPane jTextPane1;
+	private static JTextPane jTextPane1;
 	private JLabel jLabel1;
-
+	private ResultViewer viewResults = new ResultViewer();
 	/**
 	 * Launch the application.
 	 */
@@ -52,6 +60,7 @@ public class Screen5 extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
 	public Screen5() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,30 +71,45 @@ public class Screen5 extends JFrame {
 		contentPane.setLayout(contentPaneLayout);
 		setContentPane(contentPane);
 		contentPane.setBackground(Color.WHITE);		
-		{
-			jLabel1 = new JLabel();
-			jLabel1.setText("Location of the output :");
-		}
+//		{
+//			jLabel1 = new JLabel();
+//			try {
+//				jLabel1.setText("Location of the output :" + viewResults.getData(ClientController.selectedConfigFileName));
+//			} catch (SQLException e) {
+//				
+//				e.printStackTrace();
+//			}
+//		}
 		{
 			jTextPane1 = new JTextPane();
-			jTextPane1.setText("jTextPane1");
+			jTextPane1.setText("RESULT:\n");
+			jTextPane1.setFont(new java.awt.Font("Century Schoolbook L",1,12));
 		}
 		contentPaneLayout.setVerticalGroup(contentPaneLayout.createSequentialGroup()
 			.addContainerGap()
-			.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-			.addGap(27)
-			.addComponent(jTextPane1, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-			.addContainerGap(58, Short.MAX_VALUE));
+			.addComponent(jTextPane1, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
+			.addGap(0, 7, Short.MAX_VALUE));
 		contentPaneLayout.setHorizontalGroup(contentPaneLayout.createSequentialGroup()
 			.addContainerGap(18, 18)
-			.addGroup(contentPaneLayout.createParallelGroup()
-			    .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
-			        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-			        .addGap(0, 174, Short.MAX_VALUE))
-			    .addGroup(contentPaneLayout.createSequentialGroup()
-			        .addComponent(jTextPane1, GroupLayout.PREFERRED_SIZE, 321, GroupLayout.PREFERRED_SIZE)
-			        .addGap(0, 0, Short.MAX_VALUE)))
-			.addContainerGap(85, 85));
-	}
+			.addComponent(jTextPane1, 0, 400, Short.MAX_VALUE)
+			.addContainerGap());
 
+		try {
+			addText(viewResults.getData(ClientController.selectedConfigFileName));
+		} catch (SQLException e) {
+			System.out.println("Not able to get data from reviewResults..!");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addText(String s) {
+		try {
+			Document doc = jTextPane1.getDocument();
+			doc.insertString(doc.getLength(), s, null);
+		} catch(BadLocationException exc) {
+			exc.printStackTrace();
+		}
+	}
+	
+	
 }

@@ -55,9 +55,9 @@ public class Screen4 extends JFrame implements ActionListener {
 	private static ArrayList<JButton> slaves = new ArrayList<JButton>();
 	private static GroupLayout contentPaneLayout;
 
-	private AbstractAction viewResult;
+	private AbstractAction viewResult=null;
 	private JButton View;
-	private JTextPane jTextPane1;
+	private static JTextPane jTextPane1;
 	private JMenu help;
 	private JMenu Start;
 	private JMenuItem exitMenuItem;
@@ -137,11 +137,14 @@ public class Screen4 extends JFrame implements ActionListener {
 
 		setContentPane(contentPane);
 		contentPane.setPreferredSize(new java.awt.Dimension(480, 327));
+//
+//		timer1.start();
+//		timer2.start();
+//		timer3.start();
+//		timer4.start();
+		
+		
 
-		timer1.start();
-		timer2.start();
-		timer3.start();
-		timer4.start();
 	}
 
 
@@ -159,7 +162,7 @@ public class Screen4 extends JFrame implements ActionListener {
 		}
 	}
 
-	private void addText(String s) {
+	public static void addText(String s) {
 		try {
 			Document doc = jTextPane1.getDocument();
 			doc.insertString(doc.getLength(), s, null);
@@ -223,9 +226,10 @@ public class Screen4 extends JFrame implements ActionListener {
 	private JTextPane getJTextPane1() {
 		if(jTextPane1 == null) {
 			jTextPane1 = new JTextPane();
-			jTextPane1.setText("DISTRIBUTED ETL");
+			jTextPane1.setText("DISTRIBUTED ETL\n");
 			jTextPane1.setBounds(20,	20, 50, 50);
 			jTextPane1.setSize(50, 150);
+			jTextPane1.setFont(new java.awt.Font("Century Schoolbook L",1,12));
 
 			//				  JScrollPane scrolltxt = new JScrollPane(jTextPane1);
 		}
@@ -245,8 +249,10 @@ public class Screen4 extends JFrame implements ActionListener {
 		if(viewResult == null) {
 			viewResult = new AbstractAction("viewResult", null) {
 				public void actionPerformed(ActionEvent evt) {
+					System.out.println("Open new screen to see results!");
 					Screen5 frame5 = new Screen5();
 					frame5.setVisible(true);
+					
 				}
 			};
 		}
@@ -254,20 +260,23 @@ public class Screen4 extends JFrame implements ActionListener {
 	}
 
 	public static void addSlave(int slaveNo) {
-		
+		for(int i=1; i<=slaveNo; i++) 
+		{
 		slaves.add(new JButton());
-		slaves.get(slaveNo-1).setText("Slave " + Integer.toString(slaveNo));
+		slaves.get(i-1).setText("Slave " + Integer.toString(i));
 
 		contentPaneLayout.setVerticalGroup(contentPaneLayout.createSequentialGroup()
-				.addContainerGap(10 +((slaveNo-1)*45), 10 +((slaveNo-1)*45))
-				.addComponent(slaves.get(slaveNo-1), GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+				.addContainerGap(10 +((i-1)*45), 10 +((i-1)*45))
+				.addComponent(slaves.get(i-1), GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 				.addGap(90)
 				.addContainerGap(210, Short.MAX_VALUE));
 		contentPaneLayout.setHorizontalGroup(contentPaneLayout.createSequentialGroup()
 				.addContainerGap(250, 250)
-				.addComponent(slaves.get(slaveNo-1), GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+				.addComponent(slaves.get(i-1), GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
 				.addContainerGap(209, Short.MAX_VALUE));
-
+		
+		System.out.println("Adding servers");
+		}
 	}
 
 	public static void removeSlave(int slaveNo) {

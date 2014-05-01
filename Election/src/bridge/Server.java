@@ -10,21 +10,23 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Map;
 
+import view.Screen4;
+
 import common.ETLMessage;
 import common.MessageType;
 
 
 public class Server {
 
-	String ip = "128.237.214.105";
-	String port = "12345";
+	static String ip = "128.237.221.76";
+	static String port = "12345";
 
 	public Server() {
 		ListenerThread lt = new ListenerThread();
 		lt.start();
 	}
 
-	public void sendJob(String yamlFile) {
+	public static void sendJob(String yamlFile) {
 		String addr = null;
 		try {
 			addr = InetAddress.getLocalHost().getHostAddress();
@@ -32,7 +34,7 @@ public class Server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String yamlURI = "http://"+addr+":8000/"+yamlFile;
+		String yamlURI = "http://127.0.0.1:8000/"+yamlFile;
 		ETLMessage msg = new ETLMessage(MessageType.MsgNewJobClient, yamlURI, addr + ":11111");
 
 		if(ip !=null && port !=null){
@@ -162,32 +164,47 @@ public class Server {
 				out.flush();
 				out.close();
 				socket.close();
+				String status = "successful";
+				
 				if (type == MessageType.MsgTaskStatus) {
+					if(msg.getObj().toString().equals("0")) {
+						status = "failed";
+					}
+					Screen4.addText("[" + type.toString() +"] Task " + msg.getArg() + " " + status + "\n");
 					System.out.println("Get Msg TaskStatus");
 				}
 				if (type == MessageType.MsgJobStatus) {
+					if(msg.getObj().toString().equals("0")) {
+						status = "failed";
+					}
+					Screen4.addText("[" + type.toString() +"] Job " + msg.getArg() + " " + status + "\n");
 					System.out.println("Get Msg JobStatus");
 				}
 				if (type == MessageType.MsgSlaveStatus) {
+					
 					System.out.println("Get Msg SlaveStatus");
 					Map<Integer, String> slaveMap = (Map<Integer, String>) msg
 							.getObj();
 					System.out.println("================");
 					for (int k : slaveMap.keySet()) {
-						System.out.println(slaveMap.get(k));
+						System.out.println("Value of k= " + slaveMap.get(k));
+						Screen4.addText("[" + type.toString() +"]" + "Alive:" +slaveMap.get(k) + "\n");
+						//Screen4.addSlave(k);
 					}
+					Screen4.addSlave(slaveMap.size());
 				}
 
 				if (type == MessageType.MsgNewMaster) {
-					String addr = (String) msg.getObj();
+					ip = (String) msg.getObj();
+					Screen4.addText("[" + type.toString() +"]" + msg.getObj().toString()+ "\n");
 					System.out.println("Get Msg new Master");
 
-					ETLMessage m = new ETLMessage(MessageType.MsgNewJobClient,
-							"resources/conf.yaml", addr + ":11111");
-
-					MsgDispatcherClient dispatcher = new MsgDispatcherClient(m,
-							addr + ":12345");
-					dispatcher.start();
+//					ETLMessage m = new ETLMessage(MessageType.MsgNewJobClient,
+//							"resources/conf.yaml", addr + ":11111");
+//
+//					MsgDispatcherClient dispatcher = new MsgDispatcherClient(m,
+//							addr + ":12345");
+//					dispatcher.start();
 
 				}
 			} catch (Exception e) {

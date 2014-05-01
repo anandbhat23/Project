@@ -25,16 +25,21 @@ public class ResultViewer {
 	public String getData(String yamlFile) throws SQLException{
 		Yaml yaml = new Yaml();
 		String displayString = null;
+		boolean MySqlFlag=false;
+		String path = "/home/madhuri/workspace_DS/Project/ETL/resources/";
+		String path1= "/home/madhuri/workspace_DS/Project/ETL/";
+		
 		try {
-			InputStream is = new FileInputStream(new File(yamlFile));
+			InputStream is = new FileInputStream(new File(path + yamlFile));
 			Map<String, List<Map<String, Object>>> parameters = (Map<String, List<Map<String, Object>>>) yaml.load(is);
 			Map<String, Object> exporterParams = parameters.get("exporter").get(0);
 			
 			if(exporterParams.get("type").toString().equalsIgnoreCase("HTTP")){
 				String location = (String)exporterParams.get("location");
-				BufferedReader br = new BufferedReader(new FileReader(location));
-				displayString = createHTTPDisplayString(br);
+				BufferedReader br = new BufferedReader(new FileReader(path1 + location));
+				displayString = createHTTPDisplayString(br, location);
 			}else{
+				MySqlFlag=true;
 				String location = (String)exporterParams.get("location");
 				String username = (String)exporterParams.get("username");
 				String password = (String)exporterParams.get("password");
@@ -48,19 +53,22 @@ public class ResultViewer {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			connection.close();
+			if(MySqlFlag==true)
+				connection.close();
 		}
 		return displayString;
 	}
 	
-	private String createHTTPDisplayString(BufferedReader br) throws IOException {
+	private String createHTTPDisplayString(BufferedReader br, String location) throws IOException {
 		StringBuilder builder = new StringBuilder();
 		String line = null;
+		builder.append("\nLocation of file: " + location + "\n");
 		while((line = br.readLine()) != null){
 			builder.append(line);
+			builder.append("\n");
 		}
 		br.close();
-		return null;
+		return builder.toString();
 	}
 
 	private String createMySQLDisplayString(ResultSet resultSet, List<String> columns) throws SQLException {
