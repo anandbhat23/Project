@@ -15,9 +15,10 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import bridge.Server;
-
 import view.GeneralConfigGUI;
 import view.SelectConfigGUI;
 import view.WindowGUI;
@@ -36,6 +37,8 @@ public class ClientController implements Runnable {
 	private ClientConfigFile currentConfigFile;
 	private Map<String, ClientConfigFile> configFileList;
 	private ArrayList<String> importerNames = new ArrayList<String>();
+	private String selectedConfigFileName;
+	private Server server = null;
 	
 	public ClientController() {
 		gui = new WindowGUI(Constants.SELECT_CONFIG_GUI_WIDTH, Constants.SELECT_CONFIG_GUI_HEIGHT);
@@ -46,8 +49,7 @@ public class ClientController implements Runnable {
 		configFileList = new HashMap<String, ClientConfigFile>();
 		gui.addCard(selectConfigGUI, Constants.SELECT_CONFIG_PANEL_KEY);
 		gui.addCard(generalConfigGUI, Constants.GENERAL_CONFIG_PANEL_KEY);
-		
-		new Thread(new Server()).start();
+		server = new Server();
 	}
 	
 	/**
@@ -185,6 +187,28 @@ public class ClientController implements Runnable {
 	}
 	
 	public void addListeners() {
+		/**
+		 * 
+		 * handler for configlist on SelectGUI
+		 */
+
+		selectConfigGUI.addConfigFileListSelectionListener(new ListSelectionListener() {
+
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+
+						selectedConfigFileName = selectConfigGUI
+								.getSelectedConfigFileName();
+
+						// TODO Auto-generated method stub
+
+						// Madhuri, selectedConfigFileName is a private String
+						// member hold the user selected config file name.
+						server.sendJob(selectedConfigFileName);
+						// it will be updated whenever user click onto it.
+						System.out.println(selectedConfigFileName);
+					}
+				});
 		/**
 		 * handler for clicks on new button to create ETL config file
 		 */
