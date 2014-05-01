@@ -482,7 +482,7 @@ public class MasterJobTracker {
       
 
       if(clientAddr!= null) {
-        ETLMessage m = new ETLMessage(MessageType.MsgJobStatus, 1, null);
+        ETLMessage m = new ETLMessage(MessageType.MsgJobStatus, 1, jid);
         SendMsgToClient(m);
       }
       
