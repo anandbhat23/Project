@@ -42,7 +42,7 @@ public class MySQLExporter implements Exporter {
 	}
 
 	@Override
-	public void export(List<Map<String, String>> dataList) {
+	public void export(List<Map<String, String>> dataList) throws SQLException {
 		try {
 
 			testJDBCDriver();
@@ -59,9 +59,8 @@ public class MySQLExporter implements Exporter {
 				}
 				preparedStatement.executeUpdate();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally{
+			connection.close();
 		}
 
 	}
