@@ -9,8 +9,8 @@ import core.Importer;
 
 public interface Parser {
 
-	public Importer createImporter(Map<String, Object> params);
-	public Importer createImporterFromProtoMessage(Map<FieldDescriptor, Object> params);
+	public Importer createImporter(Map<String, Object> params) throws Exception;
+	public Importer createImporterFromProtoMessage(Map<FieldDescriptor, Object> params) throws Exception;
 	public Exporter createExporter(Map<String, Object> params);
 	public Exporter createExporterFromProtoMessage(Map<FieldDescriptor, Object> params);
 }

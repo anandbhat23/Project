@@ -56,7 +56,7 @@ public class YamlParser {
 		}
 		return etlJobs;
 	}
-	
+
 	public static List<ETLJob> parseFromURL(String yamlFile) {
 		Yaml yaml = new Yaml();		
 		List<ETLJob> etlJobs = Lists.newArrayList();

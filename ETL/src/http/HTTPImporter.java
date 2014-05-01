@@ -4,8 +4,10 @@ import static common.DataTypes.HTTP;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +25,13 @@ public class HTTPImporter implements Importer{
 	private BufferedReader br;
 	private HTTPData httpData;
 	
-	public HTTPImporter(HTTPData httpData) {
+	public HTTPImporter(HTTPData httpData) throws Exception {
 		super();
 		this.httpData = httpData;
 		try {
-			br = new BufferedReader(new FileReader(httpData.getLocation()));
+
+			InputStream in = new URL("http://" + httpData.getLocation()).openStream();
+			br = new BufferedReader(new InputStreamReader(in));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
