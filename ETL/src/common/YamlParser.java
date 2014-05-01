@@ -58,6 +58,8 @@ public class YamlParser {
 	      @SuppressWarnings("unchecked")
 	      Map<String, List<Map<String, Object>>> parameters = (Map<String, List<Map<String, Object>>>) yaml.load(is);
 	      List<Map<String, Object>> importerParamList = parameters.get(IMPORTER.getLabelName());
+	      String transformation = parameters.get(TRANSFORMER.getLabelName()).get(0).get(TRANSFORM_OP.getLabelName()).toString();
+
 	      //Exporting only to one destination
 	      Map<String, Object> exporterParams = parameters.get(EXPORTER.getLabelName()).get(0);
 	      
@@ -67,7 +69,7 @@ public class YamlParser {
 	      for(Map<String, Object> importerParams : importerParamList){
 	        parser = ParserFactory.getParser((String)importerParams.get(TYPE.getLabelName()));
 	        Importer importer = parser.createImporter(importerParams);
-	        ETLJob etlJob = new ETLJob(importer, exporter);
+	        ETLJob etlJob = new ETLJob(importer, exporter, transformation);
 	        etlJobs.add(etlJob);
 	      }
 	    }catch (Exception e) {

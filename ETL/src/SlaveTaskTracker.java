@@ -45,8 +45,8 @@ public class SlaveTaskTracker {
     try {
       // TODO : should get from system config file
       this.port = port;
-      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
-      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
+      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       if(ms[1].equals("localhost"))
         ms[1] = InetAddress.getLocalHost().getHostAddress();

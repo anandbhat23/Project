@@ -64,8 +64,8 @@ public class MasterJobTracker {
       // TODO : should get from system config file
       logger = new PrintWriter("resources/log", "UTF-8");
 
-      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
-      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
+      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       localhost = InetAddress.getLocalHost().getHostAddress();
       if(ms[1].equals("localhost"))
@@ -368,7 +368,7 @@ public class MasterJobTracker {
              clientAddr =  (String) msg.getArg();
           }
           System.out.println("master starts a new job! " + conf_url);
-          List<ETLJob> etlJobs = YamlParser.parse(conf_url);
+          List<ETLJob> etlJobs = YamlParser.parsefromURL(conf_url);
           for(ETLJob etlJob : etlJobs){
             newETLJob(etlJob, "");
           }
