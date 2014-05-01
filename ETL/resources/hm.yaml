@@ -1,9 +1,9 @@
 importer :
  - type : HTTP
-   location :  resources/sample.txt
+   location :  128.237.210.106:8000/sample.txt
 
  - type : MySQL
-   location :  localhost:3306
+   location :  128.237.210.106:3306
    username : root
    password : MySql@Passw0rd
    table : etl.studentinfo
@@ -20,7 +20,7 @@ transformer :
  
 exporter :
  - type : MySQL
-   location :  localhost:3306
+   location :  128.237.210.106:3306
    username : root
    password : MySql@Passw0rd
    table : etl.studentpercent

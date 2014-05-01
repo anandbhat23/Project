@@ -1,5 +1,7 @@
 package http;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,7 +16,7 @@ import static common.YamlLabel.LOCATION;
 public class HTTPParser implements Parser{
 
 	@Override
-	public Importer createImporter(Map<String, Object> params) {
+	public Importer createImporter(Map<String, Object> params) throws Exception {
 		HTTPData httpData = new HTTPData((String)params.get(LOCATION.getLabelName()));
 		Importer httpImporter = new HTTPImporter(httpData);
 		return httpImporter;
@@ -29,7 +31,7 @@ public class HTTPParser implements Parser{
 
 	@Override
 	public Importer createImporterFromProtoMessage(
-			Map<FieldDescriptor, Object> params) {
+			Map<FieldDescriptor, Object> params) throws Exception {
 		Map<String, Object> importerParams = Maps.newHashMap();
 		for(Entry<FieldDescriptor, Object> entry: params.entrySet()){
 			importerParams.put(entry.getKey().getName(), entry.getValue());

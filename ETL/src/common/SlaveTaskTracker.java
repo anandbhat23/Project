@@ -40,6 +40,7 @@ public class SlaveTaskTracker {
 	boolean inElection = false;
 	boolean electionStartedByMe = false;
 	long msgElectionTime;
+	private static final String HTTP_SERVER ="http://128.237.210.106:8000/" ;
 
 	public SlaveTaskTracker(int port) {
 
@@ -47,7 +48,7 @@ public class SlaveTaskTracker {
       // TODO : should get from system config file
       this.port = port;
       //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
-      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
+      BufferedReader br = Fileserver.getFile(HTTP_SERVER+"sysconfig");
       String[] ms = br.readLine().split(":");
       if(ms[1].equals("localhost"))
         ms[1] = InetAddress.getLocalHost().getHostAddress();
@@ -57,7 +58,7 @@ public class SlaveTaskTracker {
       slaveList = new ArrayList<String>();
       while (line != null) {
         ms = line.split(":");
-        if(ms[1].equals("localhost")) {
+        if(ms[1].equals("localhost") || ms[1].equals(InetAddress.getLocalHost().getHostAddress())) {
           
           ms[1] = InetAddress.getLocalHost().getHostAddress();
           
