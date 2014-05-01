@@ -1,3 +1,3 @@
-master:localhost:12345
-slave:localhost:15619
-slave:localhost:15719
+master:128.237.210.106:12345
+slave:128.237.214.105:15619
+slave:128.237.214.105:15719

@@ -30,7 +30,7 @@ public class MasterJobTracker {
   private static final int TIMEOUT = 2100; //ms
   private int MASTER_PORT = 12345;
   private String clientAddr = null;
-
+  private static final String HTTP_SERVER ="http://128.237.210.106:8000/" ;
   private int nextjobid = 0;
 
   // slave id to heatbeat timestamp
@@ -65,14 +65,15 @@ public class MasterJobTracker {
       // TODO : should get from system config file
       logger = new PrintWriter("resources/log", "UTF-8");
 
-      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
-      BufferedReader br = Fileserver.getFile("http://128.237.210.106:8000/sysconfig");
+      //TODO Take this from central file server
+      BufferedReader br = Fileserver.getFile(HTTP_SERVER + "sysconfig");
       String[] ms = br.readLine().split(":");
       localhost = InetAddress.getLocalHost().getHostAddress();
       if(ms[1].equals("localhost"))
         ms[1] = localhost;
       MASTER_PORT = Integer.parseInt(ms[2]);
       String line = br.readLine();
+      localhost = ms[1]+":"+ms[2];
       int sid = 0;
       while (line != null) {
         ms = line.split(":");
