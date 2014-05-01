@@ -1,4 +1,4 @@
-package utils;
+/*package utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,4 +40,4 @@ public class YamlParser {
 			throw new IOException("Yaml is incorrectly defined");
 		}
 	}
-}
+}*/

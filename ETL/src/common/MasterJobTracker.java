@@ -1,3 +1,4 @@
+package common;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
@@ -18,6 +19,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import protobuf.ProtoMessageConfig.ProtoMessage;
+import utils.Fileserver;
 import core.ETLJob;
 import common.YamlParser;
 
@@ -25,8 +27,9 @@ import common.YamlParser;
 public class MasterJobTracker {
 
   private static final int TASK_PER_SLAVE = 3;
-  private static final int TIMEOUT = 2000; //ms
+  private static final int TIMEOUT = 2100; //ms
   private int MASTER_PORT = 12345;
+  private String clientAddr = null;
 
   private int nextjobid = 0;
 
@@ -62,7 +65,9 @@ public class MasterJobTracker {
       // TODO : should get from system config file
       logger = new PrintWriter("resources/log", "UTF-8");
 
-      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //TODO Take this from central file server
+      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       localhost = InetAddress.getLocalHost().getHostAddress();
       if(ms[1].equals("localhost"))
@@ -108,13 +113,19 @@ public class MasterJobTracker {
         long ts = heartbeatMap.get(slaveid);
 
         if ((now - ts) < TIMEOUT) {
-          // this slave is good 
-          // System.out.println("SLAVE "+slaveid+" IS GOOD");
+          //System.out.println("SLAVE "+slaveid+" IS GOOD");
         } else {
           // System.out.println("SLAVE "+slaveid+" IS BAD");
           // slave died!
           System.out.println("node " + slaveid + " is died!");
           FaultTolerance_NodeFailure(slaveid);
+          updateSlaveList();
+        }
+        
+
+        if(clientAddr!= null) {
+          ETLMessage m = new ETLMessage(MessageType.MsgSlaveStatus, slaveAddr, null);
+          SendMsgToClient(m);
         }
 
       }
@@ -180,7 +191,7 @@ public class MasterJobTracker {
             + freeSlave);
         slaveLoadMap.get(freeSlave).add(task);
         // System.out.println("[slaveLoadMap debug]"+slaveLoadMap.toString());
-        ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, task, null);
+        ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, task, clientAddr);
         SendMsgToSlave(msg, freeSlave);
       }
       taskcount++;
@@ -214,6 +225,7 @@ public class MasterJobTracker {
       try {
         String ip = slaveAddr.get(slaveId).split(":")[0];
         String port = slaveAddr.get(slaveId).split(":")[1];
+        System.out.println(ip+" "+port);
         s = new Socket(ip, Integer.parseInt(port));
         ObjectOutputStream os = new ObjectOutputStream(s.getOutputStream());
         os.writeObject(m);
@@ -229,6 +241,45 @@ public class MasterJobTracker {
     }
   }
 
+  private void SendMsgToClient(ETLMessage m) {
+    MsgDispatcherClient dispatcher = new MsgDispatcherClient(m, clientAddr);
+    dispatcher.start();
+  }
+
+  public class MsgDispatcherClient extends Thread {
+
+    private ETLMessage m;
+    private String clientAddr;
+
+    public MsgDispatcherClient(ETLMessage m, String clientAddr) {
+      this.m = m;
+      this.clientAddr = clientAddr;
+    }
+
+    public void run() {
+      Socket s;
+      try {
+        
+        if(clientAddr == null) 
+          return;
+        
+        String ip = clientAddr.split(":")[0];
+        String port = clientAddr.split(":")[1];
+        s = new Socket(ip, Integer.parseInt(port));
+        ObjectOutputStream os = new ObjectOutputStream(s.getOutputStream());
+        os.writeObject(m);
+        ObjectInputStream is = new ObjectInputStream(s.getInputStream());
+        ETLMessage responseMsg = (ETLMessage) is.readObject();
+        if (responseMsg.getType() != MessageType.MsgOK)
+          throw new RuntimeException("MSG ERROR 01");
+        s.close();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }  
+  
+  
   public class MsgHandler extends Thread {
 
     Socket socket;
@@ -265,6 +316,7 @@ public class MasterJobTracker {
             return;
 
           TaskFinished(task);
+          
         } else if (type == MessageType.MsgJobFailure) {
           System.out.println("Get Msg Job failure");
           Task task = (Task) msg.getObj();
@@ -276,6 +328,11 @@ public class MasterJobTracker {
           String error_msg = (String) msg.getArg();
           System.out.println(error_msg);
           FaultTolerance_JobFailure(task);
+
+          if(clientAddr!= null) {
+            ETLMessage m = new ETLMessage(MessageType.MsgJobStatus, 0,null);
+            SendMsgToClient(m);
+          }
         }
 
         else if (type == MessageType.MsgTaskFailure) {
@@ -307,6 +364,18 @@ public class MasterJobTracker {
           }
         }
         
+        else if (type == MessageType.MsgNewJobClient) {
+          String conf_url = (String) msg.getObj();
+          if(clientAddr==null) {
+             clientAddr =  (String) msg.getArg();
+          }
+          System.out.println("master starts a new job! " + conf_url);
+          List<ETLJob> etlJobs = YamlParser.parseFromURL(conf_url);
+          for(ETLJob etlJob : etlJobs){
+            newETLJob(etlJob, "");
+          }
+        }
+        
         else if (type == MessageType.MsgNewSlaveRequest) {
           String new_addr = (String) msg.getObj();
           System.out.println("master get new slave! " + new_addr);
@@ -320,7 +389,7 @@ public class MasterJobTracker {
             addrs.add(slaveAddr.get(k));
           }
             
-          ETLMessage m = new ETLMessage(MessageType.MsgNewSlaveUpdate, addrs, localhost+":"+MASTER_PORT);
+          ETLMessage m = new ETLMessage(MessageType.MsgNewSlaveUpdate, addrs, localhost+":"+MASTER_PORT, clientAddr);
 
           for(int i=0;i<sid+1;i++) {
           
@@ -335,6 +404,25 @@ public class MasterJobTracker {
       }
     }
   }
+  
+  
+  private void updateSlaveList() {
+    
+    System.out.println("update slave list!");
+    
+    ArrayList<String> addrs = new ArrayList<String>();
+    
+    for(int k: slaveAddr.keySet() ) {
+      addrs.add(slaveAddr.get(k));
+    }
+    
+    ETLMessage m = new ETLMessage(MessageType.MsgNewSlaveRemove, addrs, null);
+
+    
+    for(int k:slaveAddr.keySet()) {
+      SendMsgToSlave(m, k);
+    }
+  }
 
   public void TaskFinished(Task t) {
 
@@ -345,6 +433,11 @@ public class MasterJobTracker {
     System.out.println("Task finished jid ==" + jid + " tid==" + tid
         + " from slave" + slaveid);
 
+    if(clientAddr!= null) {
+      ETLMessage m = new ETLMessage(MessageType.MsgTaskStatus, 1, slaveid);
+      SendMsgToClient(m);
+    }
+    
     // TODO : this is o(n) operation
     Task dummy_task = new ETLTask(tid, jid, null, null);
     List<Task> slave_task_list = slaveLoadMap.get(slaveid);
@@ -364,7 +457,7 @@ public class MasterJobTracker {
       }
       nextTask.setSlaveId(slaveid);
       slaveLoadMap.get(slaveid).add(nextTask);
-      ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, nextTask, null);
+      ETLMessage msg = new ETLMessage(MessageType.MsgTaskStart, nextTask, clientAddr);
       System.out.println("send task" + nextTask.getTaskId() + " to slave "
           + slaveid);
       SendMsgToSlave(msg, slaveid);
@@ -380,6 +473,12 @@ public class MasterJobTracker {
       
       logger.println(jid+","+","+ "1");
       logger.flush();
+      
+
+      if(clientAddr!= null) {
+        ETLMessage m = new ETLMessage(MessageType.MsgJobStatus, 1, null);
+        SendMsgToClient(m);
+      }
       
     }
   }
@@ -461,8 +560,9 @@ public class MasterJobTracker {
 
   }
   
-  public void restart(List<String> slave_addr) {
+  public void restart(List<String> slave_addr, String clientAddr) {
     
+    this.clientAddr = clientAddr;
     int sid = 0;
     for(String s: slave_addr) {
       slaveAddr.put(sid,s);
@@ -475,7 +575,7 @@ public class MasterJobTracker {
     
     //Heartbeat check timer
     Timer timer = new Timer();
-    timer.schedule(new HeartBeatCheckTimer(), 15 * 1000, // initial delay
+    timer.schedule(new HeartBeatCheckTimer(), 5* 1000, // initial delay
         2 * 1000); // subsequent rate
 
     int largest_jid = 0;

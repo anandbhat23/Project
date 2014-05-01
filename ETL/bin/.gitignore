@@ -9,7 +9,9 @@
 /merge
 /mysql
 /protobuf
+/transformer
 /utils
+/CopyOfSlaveController.class
 /ETL.class
 /ETLMessage.class
 /ETLTask.class
@@ -17,11 +19,15 @@
 /MasterJobTracker$HeartBeatCheckTimer.class
 /MasterJobTracker$ListenerThread.class
 /MasterJobTracker$MsgDispatcher.class
+/MasterJobTracker$MsgDispatcherClient.class
 /MasterJobTracker$MsgHandler.class
 /MasterJobTracker.class
 /MessageType.class
-/SlaveController1.class
-/SlaveController2.class
+/SampleClient$ListenerThread.class
+/SampleClient$MsgDispatcherClient.class
+/SampleClient$MsgHandler.class
+/SampleClient.class
+/SlaveController.class
 /SlaveTaskTracker$HeartBeatTimer.class
 /SlaveTaskTracker$ListenerThread.class
 /SlaveTaskTracker$MsgDispatcher.class
@@ -30,4 +36,3 @@
 /SlaveTaskTracker$TaskRunner.class
 /SlaveTaskTracker.class
 /Task.class
-/SlaveController.class

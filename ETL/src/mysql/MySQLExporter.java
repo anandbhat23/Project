@@ -42,7 +42,7 @@ public class MySQLExporter implements Exporter {
 	}
 
 	@Override
-	public void export(List<Map<String, String>> dataList) {
+	public void export(List<Map<String, String>> dataList) throws SQLException {
 		try {
 
 			testJDBCDriver();
@@ -50,7 +50,7 @@ public class MySQLExporter implements Exporter {
 			for (Map<String, String> data : dataList) {
 				Collection<String> values = data.values();
 				preparedStatement = connection.prepareStatement(String.format(
-						"insert into %s values (%s)", mySQLData.getTable(),
+						"insert ignore into %s values (%s)", mySQLData.getTable(),
 						StringUtils.repeat("?", ", ", data.size())));
 				int i = 1;
 				for (String value : values) {
@@ -59,9 +59,8 @@ public class MySQLExporter implements Exporter {
 				}
 				preparedStatement.executeUpdate();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally{
+			connection.close();
 		}
 
 	}

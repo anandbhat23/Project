@@ -25,17 +25,31 @@ public final class ProtoMessageConfig {
      */
     protobuf.ProtoMessageConfig.ImporterOrBuilder getImporterOrBuilder();
 
-    // required .protobuf.Exporter exporter = 2;
+    // required .protobuf.Transformer transformer = 2;
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Transformer transformer = 2;</code>
+     */
+    boolean hasTransformer();
+    /**
+     * <code>required .protobuf.Transformer transformer = 2;</code>
+     */
+    protobuf.ProtoMessageConfig.Transformer getTransformer();
+    /**
+     * <code>required .protobuf.Transformer transformer = 2;</code>
+     */
+    protobuf.ProtoMessageConfig.TransformerOrBuilder getTransformerOrBuilder();
+
+    // required .protobuf.Exporter exporter = 3;
+    /**
+     * <code>required .protobuf.Exporter exporter = 3;</code>
      */
     boolean hasExporter();
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Exporter exporter = 3;</code>
      */
     protobuf.ProtoMessageConfig.Exporter getExporter();
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Exporter exporter = 3;</code>
      */
     protobuf.ProtoMessageConfig.ExporterOrBuilder getExporterOrBuilder();
   }
@@ -104,8 +118,21 @@ public final class ProtoMessageConfig {
               break;
             }
             case 18: {
-              protobuf.ProtoMessageConfig.Exporter.Builder subBuilder = null;
+              protobuf.ProtoMessageConfig.Transformer.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = transformer_.toBuilder();
+              }
+              transformer_ = input.readMessage(protobuf.ProtoMessageConfig.Transformer.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(transformer_);
+                transformer_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              protobuf.ProtoMessageConfig.Exporter.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
                 subBuilder = exporter_.toBuilder();
               }
               exporter_ = input.readMessage(protobuf.ProtoMessageConfig.Exporter.PARSER, extensionRegistry);
@@ -113,7 +140,7 @@ public final class ProtoMessageConfig {
                 subBuilder.mergeFrom(exporter_);
                 exporter_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000002;
+              bitField0_ |= 0x00000004;
               break;
             }
           }
@@ -178,23 +205,45 @@ public final class ProtoMessageConfig {
       return importer_;
     }
 
-    // required .protobuf.Exporter exporter = 2;
-    public static final int EXPORTER_FIELD_NUMBER = 2;
-    private protobuf.ProtoMessageConfig.Exporter exporter_;
+    // required .protobuf.Transformer transformer = 2;
+    public static final int TRANSFORMER_FIELD_NUMBER = 2;
+    private protobuf.ProtoMessageConfig.Transformer transformer_;
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Transformer transformer = 2;</code>
      */
-    public boolean hasExporter() {
+    public boolean hasTransformer() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Transformer transformer = 2;</code>
+     */
+    public protobuf.ProtoMessageConfig.Transformer getTransformer() {
+      return transformer_;
+    }
+    /**
+     * <code>required .protobuf.Transformer transformer = 2;</code>
+     */
+    public protobuf.ProtoMessageConfig.TransformerOrBuilder getTransformerOrBuilder() {
+      return transformer_;
+    }
+
+    // required .protobuf.Exporter exporter = 3;
+    public static final int EXPORTER_FIELD_NUMBER = 3;
+    private protobuf.ProtoMessageConfig.Exporter exporter_;
+    /**
+     * <code>required .protobuf.Exporter exporter = 3;</code>
+     */
+    public boolean hasExporter() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .protobuf.Exporter exporter = 3;</code>
      */
     public protobuf.ProtoMessageConfig.Exporter getExporter() {
       return exporter_;
     }
     /**
-     * <code>required .protobuf.Exporter exporter = 2;</code>
+     * <code>required .protobuf.Exporter exporter = 3;</code>
      */
     public protobuf.ProtoMessageConfig.ExporterOrBuilder getExporterOrBuilder() {
       return exporter_;
@@ -202,6 +251,7 @@ public final class ProtoMessageConfig {
 
     private void initFields() {
       importer_ = protobuf.ProtoMessageConfig.Importer.getDefaultInstance();
+      transformer_ = protobuf.ProtoMessageConfig.Transformer.getDefaultInstance();
       exporter_ = protobuf.ProtoMessageConfig.Exporter.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -213,11 +263,19 @@ public final class ProtoMessageConfig {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasTransformer()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!hasExporter()) {
         memoizedIsInitialized = 0;
         return false;
       }
       if (!getImporter().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getTransformer().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -236,7 +294,10 @@ public final class ProtoMessageConfig {
         output.writeMessage(1, importer_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, exporter_);
+        output.writeMessage(2, transformer_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, exporter_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -253,7 +314,11 @@ public final class ProtoMessageConfig {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, exporter_);
+          .computeMessageSize(2, transformer_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, exporter_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -364,6 +429,7 @@ public final class ProtoMessageConfig {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getImporterFieldBuilder();
+          getTransformerFieldBuilder();
           getExporterFieldBuilder();
         }
       }
@@ -379,12 +445,18 @@ public final class ProtoMessageConfig {
           importerBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (transformerBuilder_ == null) {
+          transformer_ = protobuf.ProtoMessageConfig.Transformer.getDefaultInstance();
+        } else {
+          transformerBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         if (exporterBuilder_ == null) {
           exporter_ = protobuf.ProtoMessageConfig.Exporter.getDefaultInstance();
         } else {
           exporterBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -424,6 +496,14 @@ public final class ProtoMessageConfig {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
+        if (transformerBuilder_ == null) {
+          result.transformer_ = transformer_;
+        } else {
+          result.transformer_ = transformerBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
         if (exporterBuilder_ == null) {
           result.exporter_ = exporter_;
         } else {
@@ -448,6 +528,9 @@ public final class ProtoMessageConfig {
         if (other.hasImporter()) {
           mergeImporter(other.getImporter());
         }
+        if (other.hasTransformer()) {
+          mergeTransformer(other.getTransformer());
+        }
         if (other.hasExporter()) {
           mergeExporter(other.getExporter());
         }
@@ -460,11 +543,19 @@ public final class ProtoMessageConfig {
           
           return false;
         }
+        if (!hasTransformer()) {
+          
+          return false;
+        }
         if (!hasExporter()) {
           
           return false;
         }
         if (!getImporter().isInitialized()) {
+          
+          return false;
+        }
+        if (!getTransformer().isInitialized()) {
           
           return false;
         }
@@ -611,18 +702,135 @@ public final class ProtoMessageConfig {
         return importerBuilder_;
       }
 
-      // required .protobuf.Exporter exporter = 2;
+      // required .protobuf.Transformer transformer = 2;
+      private protobuf.ProtoMessageConfig.Transformer transformer_ = protobuf.ProtoMessageConfig.Transformer.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.ProtoMessageConfig.Transformer, protobuf.ProtoMessageConfig.Transformer.Builder, protobuf.ProtoMessageConfig.TransformerOrBuilder> transformerBuilder_;
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public boolean hasTransformer() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public protobuf.ProtoMessageConfig.Transformer getTransformer() {
+        if (transformerBuilder_ == null) {
+          return transformer_;
+        } else {
+          return transformerBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public Builder setTransformer(protobuf.ProtoMessageConfig.Transformer value) {
+        if (transformerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          transformer_ = value;
+          onChanged();
+        } else {
+          transformerBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public Builder setTransformer(
+          protobuf.ProtoMessageConfig.Transformer.Builder builderForValue) {
+        if (transformerBuilder_ == null) {
+          transformer_ = builderForValue.build();
+          onChanged();
+        } else {
+          transformerBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public Builder mergeTransformer(protobuf.ProtoMessageConfig.Transformer value) {
+        if (transformerBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              transformer_ != protobuf.ProtoMessageConfig.Transformer.getDefaultInstance()) {
+            transformer_ =
+              protobuf.ProtoMessageConfig.Transformer.newBuilder(transformer_).mergeFrom(value).buildPartial();
+          } else {
+            transformer_ = value;
+          }
+          onChanged();
+        } else {
+          transformerBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public Builder clearTransformer() {
+        if (transformerBuilder_ == null) {
+          transformer_ = protobuf.ProtoMessageConfig.Transformer.getDefaultInstance();
+          onChanged();
+        } else {
+          transformerBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public protobuf.ProtoMessageConfig.Transformer.Builder getTransformerBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getTransformerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      public protobuf.ProtoMessageConfig.TransformerOrBuilder getTransformerOrBuilder() {
+        if (transformerBuilder_ != null) {
+          return transformerBuilder_.getMessageOrBuilder();
+        } else {
+          return transformer_;
+        }
+      }
+      /**
+       * <code>required .protobuf.Transformer transformer = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          protobuf.ProtoMessageConfig.Transformer, protobuf.ProtoMessageConfig.Transformer.Builder, protobuf.ProtoMessageConfig.TransformerOrBuilder> 
+          getTransformerFieldBuilder() {
+        if (transformerBuilder_ == null) {
+          transformerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              protobuf.ProtoMessageConfig.Transformer, protobuf.ProtoMessageConfig.Transformer.Builder, protobuf.ProtoMessageConfig.TransformerOrBuilder>(
+                  transformer_,
+                  getParentForChildren(),
+                  isClean());
+          transformer_ = null;
+        }
+        return transformerBuilder_;
+      }
+
+      // required .protobuf.Exporter exporter = 3;
       private protobuf.ProtoMessageConfig.Exporter exporter_ = protobuf.ProtoMessageConfig.Exporter.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.ProtoMessageConfig.Exporter, protobuf.ProtoMessageConfig.Exporter.Builder, protobuf.ProtoMessageConfig.ExporterOrBuilder> exporterBuilder_;
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public boolean hasExporter() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public protobuf.ProtoMessageConfig.Exporter getExporter() {
         if (exporterBuilder_ == null) {
@@ -632,7 +840,7 @@ public final class ProtoMessageConfig {
         }
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public Builder setExporter(protobuf.ProtoMessageConfig.Exporter value) {
         if (exporterBuilder_ == null) {
@@ -644,11 +852,11 @@ public final class ProtoMessageConfig {
         } else {
           exporterBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public Builder setExporter(
           protobuf.ProtoMessageConfig.Exporter.Builder builderForValue) {
@@ -658,15 +866,15 @@ public final class ProtoMessageConfig {
         } else {
           exporterBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public Builder mergeExporter(protobuf.ProtoMessageConfig.Exporter value) {
         if (exporterBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
               exporter_ != protobuf.ProtoMessageConfig.Exporter.getDefaultInstance()) {
             exporter_ =
               protobuf.ProtoMessageConfig.Exporter.newBuilder(exporter_).mergeFrom(value).buildPartial();
@@ -677,11 +885,11 @@ public final class ProtoMessageConfig {
         } else {
           exporterBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public Builder clearExporter() {
         if (exporterBuilder_ == null) {
@@ -690,19 +898,19 @@ public final class ProtoMessageConfig {
         } else {
           exporterBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public protobuf.ProtoMessageConfig.Exporter.Builder getExporterBuilder() {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         onChanged();
         return getExporterFieldBuilder().getBuilder();
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       public protobuf.ProtoMessageConfig.ExporterOrBuilder getExporterOrBuilder() {
         if (exporterBuilder_ != null) {
@@ -712,7 +920,7 @@ public final class ProtoMessageConfig {
         }
       }
       /**
-       * <code>required .protobuf.Exporter exporter = 2;</code>
+       * <code>required .protobuf.Exporter exporter = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           protobuf.ProtoMessageConfig.Exporter, protobuf.ProtoMessageConfig.Exporter.Builder, protobuf.ProtoMessageConfig.ExporterOrBuilder> 
@@ -2377,17 +2585,17 @@ public final class ProtoMessageConfig {
   public interface TransformerOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional string transform_op = 1;
+    // required string transform_op = 1;
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     boolean hasTransformOp();
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     java.lang.String getTransformOp();
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     com.google.protobuf.ByteString
         getTransformOpBytes();
@@ -2488,17 +2696,17 @@ public final class ProtoMessageConfig {
     }
 
     private int bitField0_;
-    // optional string transform_op = 1;
+    // required string transform_op = 1;
     public static final int TRANSFORM_OP_FIELD_NUMBER = 1;
     private java.lang.Object transformOp_;
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     public boolean hasTransformOp() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     public java.lang.String getTransformOp() {
       java.lang.Object ref = transformOp_;
@@ -2515,7 +2723,7 @@ public final class ProtoMessageConfig {
       }
     }
     /**
-     * <code>optional string transform_op = 1;</code>
+     * <code>required string transform_op = 1;</code>
      */
     public com.google.protobuf.ByteString
         getTransformOpBytes() {
@@ -2539,6 +2747,10 @@ public final class ProtoMessageConfig {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasTransformOp()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2738,6 +2950,10 @@ public final class ProtoMessageConfig {
       }
 
       public final boolean isInitialized() {
+        if (!hasTransformOp()) {
+          
+          return false;
+        }
         return true;
       }
 
@@ -2760,16 +2976,16 @@ public final class ProtoMessageConfig {
       }
       private int bitField0_;
 
-      // optional string transform_op = 1;
+      // required string transform_op = 1;
       private java.lang.Object transformOp_ = "";
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public boolean hasTransformOp() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public java.lang.String getTransformOp() {
         java.lang.Object ref = transformOp_;
@@ -2783,7 +2999,7 @@ public final class ProtoMessageConfig {
         }
       }
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public com.google.protobuf.ByteString
           getTransformOpBytes() {
@@ -2799,7 +3015,7 @@ public final class ProtoMessageConfig {
         }
       }
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public Builder setTransformOp(
           java.lang.String value) {
@@ -2812,7 +3028,7 @@ public final class ProtoMessageConfig {
         return this;
       }
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public Builder clearTransformOp() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -2821,7 +3037,7 @@ public final class ProtoMessageConfig {
         return this;
       }
       /**
-       * <code>optional string transform_op = 1;</code>
+       * <code>required string transform_op = 1;</code>
        */
       public Builder setTransformOpBytes(
           com.google.protobuf.ByteString value) {
@@ -4318,18 +4534,20 @@ public final class ProtoMessageConfig {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014config.proto\022\010protobuf\"Z\n\014ProtoMessage" +
-      "\022$\n\010importer\030\001 \002(\0132\022.protobuf.Importer\022$" +
-      "\n\010exporter\030\002 \002(\0132\022.protobuf.Exporter\"\236\001\n" +
-      "\010Importer\022\014\n\004type\030\001 \002(\t\022\020\n\010location\030\002 \001(" +
-      "\t\022\020\n\010username\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\022\r\n" +
-      "\005table\030\005 \001(\t\022\017\n\007columns\030\006 \003(\t\022\020\n\010rowStar" +
-      "t\030\007 \001(\005\022\016\n\006rowEnd\030\010 \001(\005\022\014\n\004data\030\t \003(\t\"#\n" +
-      "\013Transformer\022\024\n\014transform_op\030\001 \001(\t\"\203\001\n\010E" +
-      "xporter\022\014\n\004type\030\001 \002(\t\022\020\n\010location\030\002 \001(\t\022" +
-      "\020\n\010username\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\022\r\n\005t",
-      "able\030\005 \001(\t\022\017\n\007columns\030\006 \003(\t\022\023\n\013destinati" +
-      "on\030\007 \001(\tB\036\n\010protobufB\022ProtoMessageConfig"
+      "\n\014config.proto\022\010protobuf\"\206\001\n\014ProtoMessag" +
+      "e\022$\n\010importer\030\001 \002(\0132\022.protobuf.Importer\022" +
+      "*\n\013transformer\030\002 \002(\0132\025.protobuf.Transfor" +
+      "mer\022$\n\010exporter\030\003 \002(\0132\022.protobuf.Exporte" +
+      "r\"\236\001\n\010Importer\022\014\n\004type\030\001 \002(\t\022\020\n\010location" +
+      "\030\002 \001(\t\022\020\n\010username\030\003 \001(\t\022\020\n\010password\030\004 \001" +
+      "(\t\022\r\n\005table\030\005 \001(\t\022\017\n\007columns\030\006 \003(\t\022\020\n\010ro" +
+      "wStart\030\007 \001(\005\022\016\n\006rowEnd\030\010 \001(\005\022\014\n\004data\030\t \003" +
+      "(\t\"#\n\013Transformer\022\024\n\014transform_op\030\001 \002(\t\"" +
+      "\203\001\n\010Exporter\022\014\n\004type\030\001 \002(\t\022\020\n\010location\030\002",
+      " \001(\t\022\020\n\010username\030\003 \001(\t\022\020\n\010password\030\004 \001(\t" +
+      "\022\r\n\005table\030\005 \001(\t\022\017\n\007columns\030\006 \003(\t\022\023\n\013dest" +
+      "ination\030\007 \001(\tB\036\n\010protobufB\022ProtoMessageC" +
+      "onfig"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4341,7 +4559,7 @@ public final class ProtoMessageConfig {
           internal_static_protobuf_ProtoMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_protobuf_ProtoMessage_descriptor,
-              new java.lang.String[] { "Importer", "Exporter", });
+              new java.lang.String[] { "Importer", "Transformer", "Exporter", });
           internal_static_protobuf_Importer_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_protobuf_Importer_fieldAccessorTable = new

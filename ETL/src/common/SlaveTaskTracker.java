@@ -1,3 +1,4 @@
+package common;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
@@ -12,11 +13,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import protobuf.ProtoMessageConfig.ProtoMessage;
+import utils.Fileserver;
 import common.Parser;
 import common.ParserFactory;
 import core.ETLJob;
 import core.Exporter;
 import core.Importer;
+import core.Transformer;
 
 public class SlaveTaskTracker {
 
@@ -31,6 +34,7 @@ public class SlaveTaskTracker {
 	List<String> slaveList;
 	int slaveid;
 	boolean bootstrapped = false;
+	String clientAddr;
 	
 	boolean master_died= false;
 	boolean inElection = false;
@@ -42,7 +46,8 @@ public class SlaveTaskTracker {
     try {
       // TODO : should get from system config file
       this.port = port;
-      BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      //BufferedReader br = new BufferedReader(new FileReader("resources/sysconfig"));
+      BufferedReader br = Fileserver.getFile("http://127.0.0.1:8000/sysconfig");
       String[] ms = br.readLine().split(":");
       if(ms[1].equals("localhost"))
         ms[1] = InetAddress.getLocalHost().getHostAddress();
@@ -102,8 +107,9 @@ public class SlaveTaskTracker {
           inElection = false;
           electionStartedByMe=false;
           master_died = false;
+          
           MasterJobTracker jobTracker = new MasterJobTracker();
-          jobTracker.restart(slaveList);
+          jobTracker.restart(slaveList, clientAddr);
           
           try {
           String ip = InetAddress.getLocalHost().getHostAddress();
@@ -113,6 +119,14 @@ public class SlaveTaskTracker {
             msgElectionTime = System.currentTimeMillis();
             electionStartedByMe=true;
             multicast(m);
+            
+            
+            System.out.println("client is "+clientAddr+" new master sent");
+            
+            ETLMessage m2 = new ETLMessage(MessageType.MsgNewMaster,
+                ip+":"+MASTER_PORT, null);  
+            
+            sendMsgToSlave(m2, clientAddr);
           }catch(Exception e) {
             e.printStackTrace();
           }
@@ -174,9 +188,21 @@ public class SlaveTaskTracker {
 
 				if (type == MessageType.MsgTaskStart) {
 					Task task = (ETLTask) msg.getObj();
+					String client = (String) msg.getArg();
+					if(clientAddr == null) {
+					  clientAddr = client;
+					}
 					System.out.println("get Msg TaskStart");
 					TaskStart(task);
 				}
+				
+        if (type == MessageType.MsgNewSlaveRemove) {
+          ArrayList<String> addrs = ((ArrayList<String>) msg.getObj());
+          addrs.remove(slaveAddr);
+          slaveList = addrs;
+          System.out.println("get Msg SlaveList Update: "+addrs);
+          
+        }
 				
         if (type == MessageType.MsgElection) {
           System.out.println("get msg elec");
@@ -211,6 +237,15 @@ public class SlaveTaskTracker {
           electionStartedByMe=false;
         }
         
+        if (type == MessageType.MsgMasterAddrRequest) {
+          System.out.println("get master addr req");
+          String dst = (String) msg.getObj();
+          if(master_died== false) {
+            ETLMessage m = new ETLMessage(MessageType.MsgMasterAddrResponse, masterAddr,null);
+            sendMsgToSlave(m,dst);
+          }
+        }
+        
         if (type == MessageType.MsgVictory) {
           System.out.println("get msg victory");
           String m_addr = (String) msg.getObj();
@@ -231,6 +266,8 @@ public class SlaveTaskTracker {
             slaveid = addrs.size()-1;
             addrs.remove(addrs.size()-1);
             masterAddr =  (String) msg.getArg();
+            if(msg.getArg2()!= null)
+              clientAddr = (String)msg.getArg2();
             System.out.println("update slave list "+ addrs);
           } else {
             String newslave = addrs.get(addrs.size()-1);
@@ -278,12 +315,13 @@ public class SlaveTaskTracker {
 				Importer importer = parser
 						.createImporterFromProtoMessage(protoMessage
 								.getImporter().getAllFields());
+				String transformation = protoMessage.getTransformer().getTransformOp();
 				parser = ParserFactory.getParser(protoMessage
 						.getExporter().getType());
 				Exporter exporter = parser
 						.createExporterFromProtoMessage(protoMessage
 								.getExporter().getAllFields());
-				job = new ETLJob(importer, exporter);
+				job = new ETLJob(importer, exporter, transformation);
 			} catch (Exception e) {
 				// FT This is a job failure
 				String err_msg = e.getMessage();
@@ -298,7 +336,8 @@ public class SlaveTaskTracker {
 				//TODO ADD the transformations
 				List<Map<String, String>> data = job.getImporter().importData(
 						protoMessage);
-				job.getExporter().export(data);
+				List<Map<String, String>> transformedData = Transformer.applyTransformations(data, job.getTransformation());
+				job.getExporter().export(transformedData);
 
 			} catch (Exception e) {
 				// FT This is a task failure

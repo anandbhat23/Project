@@ -8,6 +8,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionListener;
 
 
 public class SelectConfigGUI extends JPanel{
@@ -74,6 +75,12 @@ public class SelectConfigGUI extends JPanel{
 		return (String) configList.getSelectedValue();
 	}
 	
+	public void addConfigFileListSelectionListener(
+			ListSelectionListener listener) {
+
+		configList.addListSelectionListener(listener);
+
+	}
 	
 	public static void main(String[] args) {
 		WindowGUI gui = new WindowGUI(client.Constants.SELECT_CONFIG_GUI_WIDTH, client.Constants.SELECT_CONFIG_GUI_HEIGHT);

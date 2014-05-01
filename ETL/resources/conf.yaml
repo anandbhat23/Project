@@ -2,6 +2,9 @@ importer :
  - type : HTTP
    location :  resources/sample.txt
 
+transformer :
+ - transformop : 0;1;2
+
 exporter :
  - type : HTTP
    location :  resources/output.txt
