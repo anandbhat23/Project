@@ -1,0 +1,5 @@
+.classpath
+bin
+*.class
+resources\Application1.launch
+resources\Application2.launch
